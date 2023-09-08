@@ -1,46 +1,3 @@
-# Concept #
-
-A C++ library providing intrusive types and helper functions using them.
-
-# Install #
-## Requirements ##
-
-Binaries:
-
-- A C++20 compiler (ex: g++-13)
-- CMake 3.26 or later
-
-Testing Libraries (optional):
-
-- [Google Test](https://github.com/google/googletest) 1.13 or later (optional)
-
-## Clone
-
-```
-git clone https://github.com/arapelle/arba-itru --recurse-submodules
-```
-
-## Quick Install ##
-There is a cmake script at the root of the project which builds the library in *Release* mode and install it (default options are used).
-```
-cd /path/to/arba-itru
-cmake -P cmake/scripts/quick_install.cmake
-```
-Use the following to quickly install a different mode.
-```
-cmake -P cmake/scripts/quick_install.cmake -- TESTS BUILD Debug DIR /tmp/local
-```
-
-## Uninstall ##
-There is a uninstall cmake script created during installation. You can use it to uninstall properly this library.
-```
-cd /path/to/installed-arba-itru/
-cmake -P uninstall.cmake
-```
-
-# How to use
-## Example - Create intrusive shared and weak pointers
-```c++
 #include <arba/itru/version.hpp>
 #include <arba/itru/intrusive_ref_counter.hpp>
 #include <arba/itru/intrusive_weak_ptr.hpp>
@@ -76,12 +33,3 @@ int main()
 
     return EXIT_SUCCESS;
 }
-
-```
-
-## Example - Using *arba-itru* in a CMake project
-See *basic_cmake_project* in example, and more specifically the *CMakeLists.txt* to see how to use *arba-itru* in your CMake projects.
-
-# License
-
-[MIT License](./LICENSE.md) © arba-itru
