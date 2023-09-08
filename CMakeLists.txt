@@ -16,7 +16,7 @@ set_build_type_ifndef()
 set(PROJECT_NAME "arba-itru")
 set(project_namespace "arba")
 set(project_base_name "itru")
-set(PROJECT_VERSION 0.1.0)
+set(PROJECT_VERSION 0.2.0)
 project(${PROJECT_NAME}
         VERSION ${PROJECT_VERSION}
         DESCRIPTION "A C++ library providing intrusive types and helper functions using them."
