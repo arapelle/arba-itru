@@ -11,4 +11,5 @@ add_cpp_library_basic_tests(GTest::gtest_main
         isptr_with_core_counter_tests.cpp
         make_isptr_tests.cpp
         iwptr_with_core_counter_tests.cpp
+        intrusive_sharable_list_tests.cpp
 )
