@@ -34,7 +34,8 @@ generate_version_macro_header(generated_version_header
 
 ## Headers:
 set(headers
-	include/arba/itru/intrusive_concepts.hpp
+    include/arba/itru/concepts/intrusive_latent.hpp
+    include/arba/itru/concepts/intrusive_sharable.hpp
 	include/arba/itru/intrusive_ref_counter.hpp
 	include/arba/itru/intrusive_shared_ptr.hpp
 	include/arba/itru/intrusive_weak_ptr.hpp
