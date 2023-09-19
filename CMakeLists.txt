@@ -36,9 +36,11 @@ generate_version_macro_header(generated_version_header
 set(headers
     include/arba/itru/concepts/intrusive_latent.hpp
     include/arba/itru/concepts/intrusive_sharable.hpp
-	include/arba/itru/intrusive_ref_counter.hpp
-	include/arba/itru/intrusive_shared_ptr.hpp
-	include/arba/itru/intrusive_weak_ptr.hpp
+    include/arba/itru/intrusive_ref_counter.hpp
+    include/arba/itru/intrusive_sharable_list.hpp
+    include/arba/itru/intrusive_sharable_list_hook.hpp
+    include/arba/itru/intrusive_shared_ptr.hpp
+    include/arba/itru/intrusive_weak_ptr.hpp
 )
 
 ## Add C++ library
