@@ -291,3 +291,35 @@ TEST(intrusive_list_tests, swap__not_empty_list_arg__no_exception)
         ASSERT_EQ((--other_data_islist.end())->valid, &value_2);
     }
 }
+
+TEST(intrusive_list_tests, front__not_empty_list__no_exception)
+{
+    bool value_1 = false;
+    bool value_2 = false;
+    bool value_3 = false;
+    {
+        itru::intrusive_sharable_list<data_islist_node> data_islist;
+        data_islist.push_back(itru::make_intrusive_shared_ptr<data_islist_node>(value_1, "1"));
+        data_islist.push_back(itru::make_intrusive_shared_ptr<data_islist_node>(value_2, "2"));
+        data_islist.push_back(itru::make_intrusive_shared_ptr<data_islist_node>(value_3, "3"));
+        ASSERT_EQ(data_islist.front().valid, &value_1);
+        const itru::intrusive_sharable_list<data_islist_node>& data_islist_cref = data_islist;
+        ASSERT_EQ(data_islist_cref.front().valid, &value_1);
+    }
+}
+
+TEST(intrusive_list_tests, back__not_empty_list__no_exception)
+{
+    bool value_1 = false;
+    bool value_2 = false;
+    bool value_3 = false;
+    {
+        itru::intrusive_sharable_list<data_islist_node> data_islist;
+        data_islist.push_back(itru::make_intrusive_shared_ptr<data_islist_node>(value_1, "1"));
+        data_islist.push_back(itru::make_intrusive_shared_ptr<data_islist_node>(value_2, "2"));
+        data_islist.push_back(itru::make_intrusive_shared_ptr<data_islist_node>(value_3, "3"));
+        ASSERT_EQ(data_islist.back().valid, &value_3);
+        const itru::intrusive_sharable_list<data_islist_node>& data_islist_cref = data_islist;
+        ASSERT_EQ(data_islist_cref.back().valid, &value_3);
+    }
+}

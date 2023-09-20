@@ -66,9 +66,15 @@ class intrusive_sharable_list
 {
 public:
     using value_type = IntrusiveT;
-    using value_isptr_type = intrusive_shared_ptr<value_type>;
+    using size_type = std::size_t;
+    using reference = std::add_lvalue_reference_t<value_type>;
+    using const_reference = std::add_lvalue_reference_t<std::add_const_t<value_type>>;
+    using pointer = std::add_pointer_t<value_type>;
+    using const_pointer = std::add_pointer_t<std::add_const_t<value_type>>;
     using iterator = intrusive_sharable_list_iterator<value_type>;
     using const_iterator = intrusive_sharable_list_iterator<const value_type>;
+    using difference_type = std::ptrdiff_t;
+    using value_isptr_type = intrusive_shared_ptr<value_type>;
 
 public:
     intrusive_sharable_list();
@@ -84,6 +90,12 @@ public:
 
     inline bool empty() const noexcept { return size_ == 0; }
     inline std::size_t size() const noexcept { return size_; }
+
+    inline const_reference front() const noexcept { return *sentinel_.next(); }
+    inline reference front() noexcept { return *sentinel_.next(); }
+
+    inline const_reference back() const noexcept { return *sentinel_.previous(); }
+    inline reference back() noexcept { return *sentinel_.previous(); }
 
     void push_front(value_isptr_type value_isptr);
     void push_back(value_isptr_type value_isptr);
@@ -102,7 +114,7 @@ private:
 
 private:
     SentinelT sentinel_;
-    std::size_t size_ = 0;
+    size_type size_ = 0;
 };
 
 template <class IntrusiveT, typename SentinelT>
