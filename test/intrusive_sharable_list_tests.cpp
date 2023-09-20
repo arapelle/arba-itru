@@ -165,8 +165,10 @@ TEST(intrusive_list_tests, insert__valid_args__no_exception)
         ASSERT_FALSE(data_islist.empty());
         data_islist.push_back(itru::make_intrusive_shared_ptr<data_islist_node>(value_3, "3"));
         ASSERT_EQ(data_islist.size(), 2);
-        data_islist.insert(std::next(data_islist.begin()),
-                           itru::make_intrusive_shared_ptr<data_islist_node>(value_2, "2"));
+        auto insert_iter = data_islist.insert(std::next(data_islist.begin()),
+                                              itru::make_intrusive_shared_ptr<data_islist_node>(value_2, "2"));
+        ASSERT_EQ(insert_iter, std::next(data_islist.begin()));
+        ASSERT_EQ(insert_iter->valid, &value_2);
         ASSERT_EQ(data_islist.size(), 3);
         auto iter = data_islist.begin();
         ASSERT_EQ(iter->valid, &value_1);
