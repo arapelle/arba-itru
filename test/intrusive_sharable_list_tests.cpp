@@ -209,6 +209,9 @@ TEST(intrusive_list_tests, clear__not_empty_list__no_exception)
         ASSERT_FALSE(value_3);
         ASSERT_EQ(data_islist.size(), 0);
         ASSERT_TRUE(data_islist.empty());
+        data_islist.clear();
+        ASSERT_EQ(data_islist.size(), 0);
+        ASSERT_TRUE(data_islist.empty());
     }
     ASSERT_FALSE(svalue);
 }
