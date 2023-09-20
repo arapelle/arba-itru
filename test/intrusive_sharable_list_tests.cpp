@@ -271,3 +271,23 @@ TEST(intrusive_list_tests, clear__not_empty_list__no_exception)
     }
     ASSERT_FALSE(svalue);
 }
+
+TEST(intrusive_list_tests, swap__not_empty_list_arg__no_exception)
+{
+    bool value_1 = false;
+    bool value_2 = false;
+    bool value_3 = false;
+    {
+        itru::intrusive_sharable_list<data_islist_node> data_islist;
+        data_islist.push_back(itru::make_intrusive_shared_ptr<data_islist_node>(value_1, "1"));
+        data_islist.push_back(itru::make_intrusive_shared_ptr<data_islist_node>(value_2, "2"));
+        itru::intrusive_sharable_list<data_islist_node> other_data_islist;
+        other_data_islist.push_back(itru::make_intrusive_shared_ptr<data_islist_node>(value_3, "3"));
+        data_islist.swap(other_data_islist);
+        ASSERT_EQ(data_islist.size(), 1);
+        ASSERT_EQ(data_islist.begin()->valid, &value_3);
+        ASSERT_EQ(other_data_islist.size(), 2);
+        ASSERT_EQ(other_data_islist.begin()->valid, &value_1);
+        ASSERT_EQ((--other_data_islist.end())->valid, &value_2);
+    }
+}

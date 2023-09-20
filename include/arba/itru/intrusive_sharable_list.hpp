@@ -94,6 +94,7 @@ public:
     iterator erase(iterator iter);
 
     void clear();
+    void swap(intrusive_sharable_list& other);
 
 private:
     static void hook_after_(value_type& list_value_ref, value_isptr_type&& value_isptr);
@@ -182,6 +183,14 @@ void intrusive_sharable_list<IntrusiveT, SentinelT>::clear()
     }
     sentinel_.previous() = &sentinel_;
     size_ = 0;
+}
+
+template <class IntrusiveT, typename SentinelT>
+void intrusive_sharable_list<IntrusiveT, SentinelT>::swap(intrusive_sharable_list& other)
+{
+    sentinel_.next().swap(other.sentinel_.next());
+    std::swap(sentinel_.previous(), other.sentinel_.previous());
+    std::swap(size_, other.size_);
 }
 
 template <class IntrusiveT, typename SentinelT>
