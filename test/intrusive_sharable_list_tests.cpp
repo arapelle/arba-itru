@@ -2,6 +2,68 @@
 #include <arba/itru/intrusive_sharable_list.hpp>
 #include <gtest/gtest.h>
 
+//----------------------------------------------------------------
+
+TEST(intrusive_list_iter_tests, constructor_abstract__no_arg__no_exception)
+{
+    using data_islist_node_isptr = itru::intrusive_shared_ptr<data_islist_node>;
+
+    constexpr std::size_t node_count = 3;
+    std::array<data_islist_node_isptr, node_count> nodes =
+    {
+        itru::make_intrusive_shared_ptr<data_islist_node>(),
+        itru::make_intrusive_shared_ptr<data_islist_node>(),
+        itru::make_intrusive_shared_ptr<data_islist_node>()
+    };
+    for (unsigned i = 0; i < node_count; ++i)
+    {
+        data_islist_node_isptr& node = nodes[i];
+        data_islist_node_isptr& next_node = nodes[(i + 1) % node_count];
+        data_islist_node_isptr& previous_node = nodes[(i + node_count - 1) % node_count];
+        node->text = std::to_string(i);
+        node->next() = next_node;
+        node->previous() = previous_node.get();
+    }
+
+    itru::intrusive_sharable_list_iterator iter(*nodes[0]);
+    ASSERT_EQ(iter.ptr(), nodes[0].get());
+    ASSERT_EQ(&*iter, nodes[0].get());
+    ASSERT_EQ(iter->text, nodes[0]->text);
+    ASSERT_EQ(&(iter->text), &(nodes[0]->text));
+
+    itru::intrusive_sharable_list_iterator iter_0(*nodes[0]);
+    itru::intrusive_sharable_list_iterator iter_1(*nodes[1]);
+    itru::intrusive_sharable_list_iterator iter_2(*nodes[2]);
+    ASSERT_EQ(iter, iter_0);
+    ASSERT_NE(iter, iter_1);
+    ASSERT_NE(iter, iter_2);
+    ASSERT_NE(iter_1, iter_2);
+
+    ASSERT_EQ(++iter, iter_1);
+    ASSERT_EQ(++iter, iter_2);
+    ASSERT_EQ(++iter, iter_0);
+
+    ASSERT_EQ(iter++, iter_0);
+    ASSERT_EQ(iter, iter_1);
+    ASSERT_EQ(iter++, iter_1);
+    ASSERT_EQ(iter, iter_2);
+    ASSERT_EQ(iter++, iter_2);
+    ASSERT_EQ(iter, iter_0);
+
+    ASSERT_EQ(--iter, iter_2);
+    ASSERT_EQ(--iter, iter_1);
+    ASSERT_EQ(--iter, iter_0);
+
+    ASSERT_EQ(iter--, iter_0);
+    ASSERT_EQ(iter, iter_2);
+    ASSERT_EQ(iter--, iter_2);
+    ASSERT_EQ(iter, iter_1);
+    ASSERT_EQ(iter--, iter_1);
+    ASSERT_EQ(iter, iter_0);
+}
+
+//----------------------------------------------------------------
+
 TEST(intrusive_list_tests, constructor_abstract__no_arg__no_exception)
 {
     itru::intrusive_sharable_list<abstract_data_islist_node, sentinel_data_islist_node> data_islist;
