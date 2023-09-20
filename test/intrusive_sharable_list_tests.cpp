@@ -185,6 +185,62 @@ TEST(intrusive_list_tests, insert__valid_args__no_exception)
     ASSERT_FALSE(value_3);
 }
 
+TEST(intrusive_list_tests, pop_front__not_empty_list__no_exception)
+{
+    bool value_1 = false;
+    bool value_2 = false;
+    bool value_3 = false;
+    {
+        itru::intrusive_sharable_list<data_islist_node> data_islist;
+        data_islist.push_back(itru::make_intrusive_shared_ptr<data_islist_node>(value_1, "1"));
+        data_islist.push_back(itru::make_intrusive_shared_ptr<data_islist_node>(value_2, "2"));
+        data_islist.push_back(itru::make_intrusive_shared_ptr<data_islist_node>(value_3, "3"));
+        data_islist.pop_front();
+        ASSERT_EQ(data_islist.size(), 2);
+        ASSERT_FALSE(value_1);
+        ASSERT_TRUE(value_2);
+        ASSERT_TRUE(value_3);
+    }
+}
+
+TEST(intrusive_list_tests, pop_back__not_empty_list__no_exception)
+{
+    bool value_1 = false;
+    bool value_2 = false;
+    bool value_3 = false;
+    {
+        itru::intrusive_sharable_list<data_islist_node> data_islist;
+        data_islist.push_back(itru::make_intrusive_shared_ptr<data_islist_node>(value_1, "1"));
+        data_islist.push_back(itru::make_intrusive_shared_ptr<data_islist_node>(value_2, "2"));
+        data_islist.push_back(itru::make_intrusive_shared_ptr<data_islist_node>(value_3, "3"));
+        data_islist.pop_back();
+        ASSERT_EQ(data_islist.size(), 2);
+        ASSERT_TRUE(value_1);
+        ASSERT_TRUE(value_2);
+        ASSERT_FALSE(value_3);
+    }
+}
+
+TEST(intrusive_list_tests, erase__valid_arg__no_exception)
+{
+    bool value_1 = false;
+    bool value_2 = false;
+    bool value_3 = false;
+    {
+        itru::intrusive_sharable_list<data_islist_node> data_islist;
+        data_islist.push_back(itru::make_intrusive_shared_ptr<data_islist_node>(value_1, "1"));
+        data_islist.push_back(itru::make_intrusive_shared_ptr<data_islist_node>(value_2, "2"));
+        data_islist.push_back(itru::make_intrusive_shared_ptr<data_islist_node>(value_3, "3"));
+        auto next_iter = data_islist.erase(std::next(data_islist.begin()));
+        ASSERT_EQ(next_iter, std::next(data_islist.begin()));
+        ASSERT_EQ(next_iter->valid, &value_3);
+        ASSERT_EQ(data_islist.size(), 2);
+        ASSERT_TRUE(value_1);
+        ASSERT_FALSE(value_2);
+        ASSERT_TRUE(value_3);
+    }
+}
+
 TEST(intrusive_list_tests, clear__not_empty_list__no_exception)
 {
     bool svalue = false;

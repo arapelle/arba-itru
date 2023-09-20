@@ -88,7 +88,7 @@ public:
     void push_front(value_isptr_type value_isptr);
     void push_back(value_isptr_type value_isptr);
     const_iterator insert(const_iterator iter, value_isptr_type value_isptr);
-    iterator erase(const_iterator iter);
+    iterator erase(iterator iter);
 
     void clear();
 
@@ -144,7 +144,7 @@ intrusive_sharable_list<IntrusiveT, SentinelT>::insert(const_iterator iter, valu
 
 template <class IntrusiveT, typename SentinelT>
 typename intrusive_sharable_list<IntrusiveT, SentinelT>::iterator
-intrusive_sharable_list<IntrusiveT, SentinelT>::erase(const_iterator iter)
+intrusive_sharable_list<IntrusiveT, SentinelT>::erase(iterator iter)
 {
     iterator res_iter(*iter->next());
     unhook_(*iter);
@@ -183,7 +183,7 @@ void intrusive_sharable_list<IntrusiveT, SentinelT>::unhook_(value_type& vref)
     IntrusiveT* previous = vref.previous();
     vref.next()->previous() = previous;
     vref.previous() = nullptr;
-    previous->next() = std::move(vref.next_);
+    previous->next() = std::move(vref.next());
 }
 
 }
