@@ -330,3 +330,10 @@ inline void std::swap(::arba::itru::intrusive_sharable_list<ValueT>& lhs,
 {
     lhs.swap(rhs);
 }
+
+template <class ValueT, class UnaryPredicate>
+inline typename ::arba::itru::intrusive_sharable_list<ValueT>::size_type
+std::erase_if(::arba::itru::intrusive_sharable_list<ValueT>& lhs, UnaryPredicate predicate)
+{
+    return lhs.remove_if(predicate);
+}
