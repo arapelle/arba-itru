@@ -323,3 +323,10 @@ void intrusive_sharable_list<IntrusiveT, SentinelT>::unhook_(value_type& vref)
 
 }
 }
+
+template <class ValueT>
+inline void std::swap(::arba::itru::intrusive_sharable_list<ValueT>& lhs,
+                      ::arba::itru::intrusive_sharable_list<ValueT>& rhs) noexcept
+{
+    lhs.swap(rhs);
+}
