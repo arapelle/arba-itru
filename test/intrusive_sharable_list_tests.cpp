@@ -385,3 +385,122 @@ TEST(intrusive_list_tests, emplace__valid_args__no_exception)
     ASSERT_FALSE(value_2);
     ASSERT_FALSE(value_3);
 }
+
+TEST(intrusive_list_tests, splice__list__no_exception)
+{
+    bool value_1 = false;
+    bool value_2 = false;
+    bool value_3 = false;
+    bool value_4 = false;
+    bool value_5 = false;
+    bool value_6 = false;
+    {
+        itru::intrusive_sharable_list<data_islist_node> data_islist;
+        data_islist.emplace_back(value_1, "1");
+        data_islist.emplace_back(value_2, "2");
+        data_islist.emplace_back(value_3, "3");
+        itru::intrusive_sharable_list<data_islist_node> other_data_islist;
+        other_data_islist.emplace_back(value_4, "4");
+        other_data_islist.emplace_back(value_5, "5");
+        other_data_islist.emplace_back(value_6, "6");
+        data_islist.splice(data_islist.begin(), other_data_islist);
+        std::vector<const bool*> value_pointers;
+        for (const auto& item : data_islist)
+            value_pointers.push_back(item.valid);
+        std::vector<const bool*> expected_pointers{ &value_4, &value_5, &value_6, &value_1, &value_2, &value_3};
+        ASSERT_EQ(value_pointers, expected_pointers);
+        ASSERT_EQ(data_islist.size(), 6);
+        ASSERT_TRUE(other_data_islist.empty());
+    }
+}
+
+TEST(intrusive_list_tests, splice__rvalue_list__no_exception)
+{
+    bool value_1 = false;
+    bool value_2 = false;
+    bool value_3 = false;
+    bool value_4 = false;
+    bool value_5 = false;
+    bool value_6 = false;
+    {
+        itru::intrusive_sharable_list<data_islist_node> data_islist;
+        data_islist.emplace_back(value_1, "1");
+        data_islist.emplace_back(value_2, "2");
+        data_islist.emplace_back(value_3, "3");
+        auto gen_list = [&](){
+            itru::intrusive_sharable_list<data_islist_node> other_data_islist;
+            other_data_islist.emplace_back(value_4, "4");
+            other_data_islist.emplace_back(value_5, "5");
+            other_data_islist.emplace_back(value_6, "6");
+            return other_data_islist;
+        };
+        data_islist.splice(data_islist.begin(), gen_list());
+        std::vector<const bool*> value_pointers;
+        for (const auto& item : data_islist)
+            value_pointers.push_back(item.valid);
+        std::vector<const bool*> expected_pointers{ &value_4, &value_5, &value_6, &value_1, &value_2, &value_3};
+        ASSERT_EQ(value_pointers, expected_pointers);
+        ASSERT_EQ(data_islist.size(), 6);
+    }
+}
+
+TEST(intrusive_list_tests, splice__sublist__no_exception)
+{
+    bool value_1 = false;
+    bool value_2 = false;
+    bool value_3 = false;
+    bool value_4 = false;
+    bool value_5 = false;
+    bool value_6 = false;
+    {
+        itru::intrusive_sharable_list<data_islist_node> data_islist;
+        data_islist.emplace_back(value_1, "1");
+        data_islist.emplace_back(value_2, "2");
+        data_islist.emplace_back(value_3, "3");
+        itru::intrusive_sharable_list<data_islist_node> other_data_islist;
+        other_data_islist.emplace_back(value_4, "4");
+        other_data_islist.emplace_back(value_5, "5");
+        other_data_islist.emplace_back(value_6, "6");
+        data_islist.splice(data_islist.begin(), other_data_islist,
+                           std::next(other_data_islist.begin()), other_data_islist.end());
+        std::vector<const bool*> value_pointers;
+        for (const auto& item : data_islist)
+            value_pointers.push_back(item.valid);
+        std::vector<const bool*> expected_pointers{ &value_5, &value_6, &value_1, &value_2, &value_3};
+        ASSERT_EQ(value_pointers, expected_pointers);
+        ASSERT_EQ(data_islist.size(), 5);
+        ASSERT_EQ(other_data_islist.front().valid, &value_4);
+        ASSERT_EQ(other_data_islist.size(), 1);
+    }
+}
+
+TEST(intrusive_list_tests, splice__value_iter__no_exception)
+{
+    bool value_1 = false;
+    bool value_2 = false;
+    bool value_3 = false;
+    bool value_4 = false;
+    bool value_5 = false;
+    bool value_6 = false;
+    {
+        itru::intrusive_sharable_list<data_islist_node> data_islist;
+        data_islist.emplace_back(value_1, "1");
+        data_islist.emplace_back(value_2, "2");
+        data_islist.emplace_back(value_3, "3");
+        itru::intrusive_sharable_list<data_islist_node> other_data_islist;
+        other_data_islist.emplace_back(value_4, "4");
+        other_data_islist.emplace_back(value_5, "5");
+        other_data_islist.emplace_back(value_6, "6");
+        data_islist.splice(data_islist.begin(), other_data_islist,
+                           std::next(other_data_islist.begin()));
+        std::vector<const bool*> value_pointers;
+        for (const auto& item : data_islist)
+            value_pointers.push_back(item.valid);
+        std::vector<const bool*> expected_pointers{ &value_5, &value_1, &value_2, &value_3};
+        ASSERT_EQ(value_pointers, expected_pointers);
+        ASSERT_EQ(data_islist.size(), 4);
+        ASSERT_EQ(other_data_islist.front().valid, &value_4);
+        ASSERT_EQ(other_data_islist.back().valid, &value_6);
+        ASSERT_EQ(other_data_islist.size(), 2);
+    }
+}

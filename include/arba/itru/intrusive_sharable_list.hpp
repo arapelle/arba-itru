@@ -54,6 +54,10 @@ public:
     pointer operator->() noexcept { return pointer_; }
 
     inline pointer ptr() const noexcept { return pointer_; }
+    inline intrusive_shared_ptr<value_type> make_intrusive_shared() const noexcept
+    {
+        return intrusive_shared_ptr<value_type>(pointer_);
+    }
 
     auto operator<=>(const intrusive_sharable_list_iterator&) const noexcept = default;
 
@@ -124,7 +128,14 @@ public:
     void clear();
     void swap(intrusive_sharable_list& other);
 
+    inline void splice(iterator iter, intrusive_sharable_list& other);
+    inline void splice(iterator iter, intrusive_sharable_list&& other);
+    inline void splice(iterator iter, intrusive_sharable_list& other, iterator it);
+    inline void splice(iterator iter, intrusive_sharable_list& other, iterator first, iterator last);
+
 private:
+    void splice_(iterator iter, intrusive_sharable_list &other, iterator first, iterator last, std::size_t size);
+
     static void hook_after_(value_type& list_value_ref, value_isptr_type&& value_isptr);
     static void unhook_(value_type& list_value_ref);
 
@@ -219,6 +230,54 @@ void intrusive_sharable_list<IntrusiveT, SentinelT>::swap(intrusive_sharable_lis
     sentinel_.next().swap(other.sentinel_.next());
     std::swap(sentinel_.previous(), other.sentinel_.previous());
     std::swap(size_, other.size_);
+}
+
+template <class IntrusiveT, typename SentinelT>
+void intrusive_sharable_list<IntrusiveT, SentinelT>::splice(iterator iter, intrusive_sharable_list& other)
+{
+    splice_(iter, other, other.begin(), other.end(), other.size());
+}
+
+template <class IntrusiveT, typename SentinelT>
+void intrusive_sharable_list<IntrusiveT, SentinelT>::splice(iterator iter, intrusive_sharable_list&& other)
+{
+    splice_(iter, other, other.begin(), other.end(), other.size());
+}
+
+template <class IntrusiveT, typename SentinelT>
+void intrusive_sharable_list<IntrusiveT, SentinelT>::splice(iterator iter, intrusive_sharable_list& other,
+                                                            iterator it)
+{
+    value_isptr_type aux_isptr = it.make_intrusive_shared();
+    unhook_(*it);
+    hook_after_(*iter->previous(), std::move(aux_isptr));
+    ++size_;
+    --other.size_;
+}
+
+template <class IntrusiveT, typename SentinelT>
+void intrusive_sharable_list<IntrusiveT, SentinelT>::splice(iterator iter, intrusive_sharable_list& other,
+                                                            iterator first, iterator last)
+{
+    splice_(iter, other, first, last, std::distance(first, last));
+}
+
+template <class IntrusiveT, typename SentinelT>
+void intrusive_sharable_list<IntrusiveT, SentinelT>::splice_(iterator iter, intrusive_sharable_list& other,
+                                                             iterator first, iterator last, std::size_t size)
+{
+    pointer iter_previous = iter->previous();
+    pointer first_previous = first->previous();
+    pointer last_previous = last->previous();
+    iter->previous() = last_previous;
+    last->previous() = first_previous;
+    first->previous() = last_previous;
+    value_isptr_type iter_isptr = std::move(iter_previous->next());
+    iter_previous->next() = std::move(first_previous->next());
+    first_previous->next() = std::move(last_previous->next());
+    last_previous->next() = std::move(iter_isptr);
+    size_ += size;
+    other.size_ -= size;
 }
 
 template <class IntrusiveT, typename SentinelT>
