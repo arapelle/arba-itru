@@ -16,7 +16,7 @@ set_build_type_ifndef()
 set(PROJECT_NAME "arba-itru")
 set(project_namespace "arba")
 set(project_base_name "itru")
-set(PROJECT_VERSION 0.1.0)
+set(PROJECT_VERSION 0.2.0)
 project(${PROJECT_NAME}
         VERSION ${PROJECT_VERSION}
         DESCRIPTION "A C++ library providing intrusive types and helper functions using them."
@@ -34,10 +34,13 @@ generate_version_macro_header(generated_version_header
 
 ## Headers:
 set(headers
-	include/arba/itru/intrusive_concepts.hpp
-	include/arba/itru/intrusive_ref_counter.hpp
-	include/arba/itru/intrusive_shared_ptr.hpp
-	include/arba/itru/intrusive_weak_ptr.hpp
+    include/arba/itru/concepts/intrusive_latent.hpp
+    include/arba/itru/concepts/intrusive_sharable.hpp
+    include/arba/itru/intrusive_ref_counter.hpp
+    include/arba/itru/intrusive_sharable_list.hpp
+    include/arba/itru/intrusive_sharable_list_hook.hpp
+    include/arba/itru/intrusive_shared_ptr.hpp
+    include/arba/itru/intrusive_weak_ptr.hpp
 )
 
 ## Add C++ library
