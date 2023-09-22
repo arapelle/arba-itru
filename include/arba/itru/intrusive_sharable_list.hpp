@@ -101,6 +101,22 @@ public:
     void push_back(value_isptr_type value_isptr);
     const_iterator insert(const_iterator iter, value_isptr_type value_isptr);
 
+    template <class... ArgsT>
+    inline void emplace_front(ArgsT&&... args)
+    {
+        push_front(make_intrusive_shared_ptr<value_type>(std::forward<ArgsT>(args)...));
+    }
+    template <class... ArgsT>
+    inline void emplace_back(ArgsT&&... args)
+    {
+        push_back(make_intrusive_shared_ptr<value_type>(std::forward<ArgsT>(args)...));
+    }
+    template <class... ArgsT>
+    inline const_iterator emplace(const_iterator iter, ArgsT&&... args)
+    {
+        return insert(iter, make_intrusive_shared_ptr<value_type>(std::forward<ArgsT>(args)...));
+    }
+
     void pop_front();
     void pop_back();
     iterator erase(iterator iter);

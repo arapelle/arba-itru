@@ -323,3 +323,65 @@ TEST(intrusive_list_tests, back__not_empty_list__no_exception)
         ASSERT_EQ(data_islist_cref.back().valid, &value_3);
     }
 }
+
+TEST(intrusive_list_tests, emplace_front__valid_args__no_exception)
+{
+    bool value = false;
+    bool value_1 = false;
+    {
+        itru::intrusive_sharable_list<data_islist_node> data_islist;
+        data_islist.push_back(itru::make_intrusive_shared_ptr<data_islist_node>(value, "."));
+        ASSERT_FALSE(value_1);
+        data_islist.emplace_front(value_1, "1");
+        ASSERT_TRUE(value_1);
+        ASSERT_EQ(data_islist.front().valid, &value_1);
+        ASSERT_EQ(data_islist.front().text, "1");
+        ASSERT_EQ(data_islist.size(), 2);
+        ASSERT_EQ(data_islist.back().valid, &value);
+    }
+    ASSERT_FALSE(value_1);
+    ASSERT_FALSE(value);
+}
+
+TEST(intrusive_list_tests, emplace_back__valid_args__no_exception)
+{
+    bool value = false;
+    bool value_1 = false;
+    {
+        itru::intrusive_sharable_list<data_islist_node> data_islist;
+        data_islist.push_back(itru::make_intrusive_shared_ptr<data_islist_node>(value, "."));
+        ASSERT_FALSE(value_1);
+        data_islist.emplace_back(value_1, "1");
+        ASSERT_TRUE(value_1);
+        ASSERT_EQ(data_islist.back().valid, &value_1);
+        ASSERT_EQ(data_islist.back().text, "1");
+        ASSERT_EQ(data_islist.size(), 2);
+        ASSERT_EQ(data_islist.front().valid, &value);
+    }
+    ASSERT_FALSE(value_1);
+    ASSERT_FALSE(value);
+}
+
+TEST(intrusive_list_tests, emplace__valid_args__no_exception)
+{
+    bool value_1 = false;
+    bool value_2 = false;
+    bool value_3 = false;
+    {
+        itru::intrusive_sharable_list<data_islist_node> data_islist;
+        data_islist.push_back(itru::make_intrusive_shared_ptr<data_islist_node>(value_1, "1"));
+        data_islist.push_back(itru::make_intrusive_shared_ptr<data_islist_node>(value_3, "3"));
+        ASSERT_FALSE(value_2);
+        auto iter = data_islist.emplace(std::next(data_islist.begin()), value_2, "2");
+        ASSERT_TRUE(value_2);
+        ASSERT_EQ(iter, std::next(data_islist.begin()));
+        ASSERT_EQ(iter->valid, &value_2);
+        ASSERT_EQ(iter->text, "2");
+        ASSERT_EQ(data_islist.size(), 3);
+        ASSERT_EQ(data_islist.front().valid, &value_1);
+        ASSERT_EQ(data_islist.back().valid, &value_3);
+    }
+    ASSERT_FALSE(value_1);
+    ASSERT_FALSE(value_2);
+    ASSERT_FALSE(value_3);
+}
