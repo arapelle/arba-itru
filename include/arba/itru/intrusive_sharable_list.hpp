@@ -133,6 +133,9 @@ public:
     inline void splice(iterator iter, intrusive_sharable_list& other, iterator it);
     inline void splice(iterator iter, intrusive_sharable_list& other, iterator first, iterator last);
 
+    template <class UnaryPredicate>
+    size_type remove_if(UnaryPredicate predicate);
+
 private:
     void splice_(iterator iter, intrusive_sharable_list &other, iterator first, iterator last, std::size_t size);
 
@@ -260,6 +263,25 @@ void intrusive_sharable_list<IntrusiveT, SentinelT>::splice(iterator iter, intru
                                                             iterator first, iterator last)
 {
     splice_(iter, other, first, last, std::distance(first, last));
+}
+
+template <class IntrusiveT, typename SentinelT>
+template <class UnaryPredicate>
+typename intrusive_sharable_list<IntrusiveT, SentinelT>::size_type
+intrusive_sharable_list<IntrusiveT, SentinelT>::remove_if(UnaryPredicate predicate)
+{
+    size_type count = 0;
+    for (auto iter = begin(), end_iter = end(); iter != end_iter; )
+    {
+        if (predicate(*iter))
+        {
+            iter = erase(iter);
+            ++count;
+        }
+        else
+            ++iter;
+    }
+    return count;
 }
 
 template <class IntrusiveT, typename SentinelT>
