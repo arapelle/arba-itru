@@ -17,7 +17,7 @@ Testing Libraries (optional):
 ## Clone
 
 ```
-git clone https://github.com/arapelle/arba-itru --recurse-submodules
+git clone https://github.com/arapelle/arba-itru
 ```
 
 ## Quick Install ##
