@@ -1,8 +1,9 @@
+include(cmtk/CppLibraryTests)
+include(GoogleTest)
 
-find_or_fetch_GTest()
+find_package(GTest 1.14 CONFIG REQUIRED)
 
-add_cpp_library_basic_tests(GTest::gtest_main
-    HEADER_ONLY ${PROJECT_NAME}
+add_cpp_library_basic_tests(${PROJECT_NAME} GTest::gtest_main
     SOURCES
         project_version_tests.cpp
         intrusive_ref_counter_tests.cpp

@@ -25,6 +25,8 @@ public:
         : pointer_(iter.ptr())
     {}
 
+    inline intrusive_sharable_list_iterator& operator=(intrusive_sharable_list_iterator const& iter) = default;
+
     intrusive_sharable_list_iterator& operator++() noexcept
     {
         pointer_ = pointer_->next().get();

@@ -12,7 +12,7 @@ public:
 
 int main()
 {
-    std::cout << "arba-itru-" << ARBA_ITRU_VERSION << std::endl;
+    std::cout << std::format("arba-itru {}", itru::version) << std::endl;
 
     itru::intrusive_shared_ptr data_isptr = itru::make_intrusive_shared_ptr<intrusive_data>("hello there");
     itru::intrusive_shared_ptr data_isptr_2 = data_isptr;

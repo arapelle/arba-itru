@@ -1,9 +1,7 @@
 #pragma once
 
-#include <atomic>
-#include <type_traits>
-
-#include <arba/core/type_traits.hpp>
+#include <arba/meta/type_traits/integer_n.hpp>
+#include <arba/meta/policy/thread_policy.hpp>
 
 inline namespace arba
 {
@@ -15,30 +13,30 @@ class intrusive_type_base
 private:
     inline ~intrusive_type_base() = default;
 
-    template <unsigned counter_bitsize, core::thread_policy th_policy>
-        requires (sizeof(core::make_integer_t<counter_bitsize, unsigned, th_policy>) <= 8)
+    template <unsigned counter_bitsize, meta::ThreadPolicy th_policy>
+        requires (sizeof(meta::uint_n_t<counter_bitsize, th_policy>) <= 8)
     friend class intrusive_ref_counter;
 
-    template <unsigned counter_bitsize, core::thread_policy th_policy>
-        requires (sizeof(core::make_integer_t<counter_bitsize, unsigned, th_policy>) < 8
-                 || std::is_same_v<th_policy, core::thread_unsafe_t>)
+    template <unsigned counter_bitsize, meta::ThreadPolicy th_policy>
+        requires (sizeof(meta::uint_n_t<counter_bitsize, th_policy>) < 8
+                 || std::is_same_v<th_policy, meta::thread_unsafe_t>)
     friend class intrusive_ref_counters;
 };
 
-template <unsigned counter_bitsize = 32, core::thread_policy th_policy = core::thread_safe_t>
-    requires (sizeof(core::make_integer_t<counter_bitsize, unsigned, th_policy>) <= 8)
+template <unsigned counter_bitsize = 32, meta::ThreadPolicy th_policy = meta::thread_safe_t>
+    requires (sizeof(meta::uint_n_t<counter_bitsize, th_policy>) <= 8)
 class intrusive_ref_counter;
 
-template <unsigned counter_bitsize = 32, core::thread_policy th_policy = core::thread_safe_t>
-    requires (sizeof(core::make_integer_t<counter_bitsize, unsigned, th_policy>) < 8
-             || std::is_same_v<th_policy, core::thread_unsafe_t>)
+template <unsigned counter_bitsize = 32, meta::ThreadPolicy th_policy = meta::thread_safe_t>
+    requires (sizeof(meta::uint_n_t<counter_bitsize, th_policy>) < 8
+             || std::is_same_v<th_policy, meta::thread_unsafe_t>)
 class intrusive_ref_counters;
 
 template <unsigned counter_bitsize>
-class intrusive_ref_counter<counter_bitsize, core::thread_safe_t> : public intrusive_type_base
+class intrusive_ref_counter<counter_bitsize, meta::thread_safe_t> : public intrusive_type_base
 {
 private:
-    using atomic_ref_counter_type = core::make_integer_t<counter_bitsize, unsigned, core::thread_safe_t>;
+    using atomic_ref_counter_type = meta::uint_n_t<counter_bitsize, meta::thread_safe_t>;
 
 public:
     intrusive_ref_counter() noexcept
@@ -74,10 +72,10 @@ private:
 };
 
 template <unsigned counter_bitsize>
-class intrusive_ref_counter<counter_bitsize, core::thread_unsafe_t> : public intrusive_type_base
+class intrusive_ref_counter<counter_bitsize, meta::thread_unsafe_t> : public intrusive_type_base
 {
 private:
-    using ref_counter_type = core::make_integer_t<counter_bitsize, unsigned>;
+    using ref_counter_type = meta::uint_n_t<counter_bitsize, meta::thread_unsafe_t>;
 
 public:
     intrusive_ref_counter() noexcept {}
@@ -111,11 +109,11 @@ private:
 };
 
 template <unsigned counter_bitsize>
-class intrusive_ref_counters<counter_bitsize, core::thread_unsafe_t>
-    : public intrusive_ref_counter<counter_bitsize, core::thread_unsafe_t>
+class intrusive_ref_counters<counter_bitsize, meta::thread_unsafe_t>
+    : public intrusive_ref_counter<counter_bitsize, meta::thread_unsafe_t>
 {
 private:
-    using ref_counter_type = core::make_integer_t<counter_bitsize, unsigned>;
+    using ref_counter_type = meta::uint_n_t<counter_bitsize, meta::thread_unsafe_t>;
 
 public:
     intrusive_ref_counters() noexcept {}
@@ -133,13 +131,13 @@ public:
 
     inline static bool decrement_use_counter(intrusive_ref_counters* ptr) noexcept
     {
-        return intrusive_ref_counter<counter_bitsize, core::thread_unsafe_t>::decrement_use_counter(ptr)
+        return intrusive_ref_counter<counter_bitsize, meta::thread_unsafe_t>::decrement_use_counter(ptr)
                && ptr->latent_counter_ == 0;
     }
 
     inline static bool lock_use_counter(intrusive_ref_counters* ptr) noexcept
     {
-        intrusive_ref_counter<counter_bitsize, core::thread_unsafe_t>::increment_use_counter(ptr);
+        intrusive_ref_counter<counter_bitsize, meta::thread_unsafe_t>::increment_use_counter(ptr);
         return true;
     }
 
@@ -161,12 +159,12 @@ private:
 };
 
 template <unsigned counter_bitsize>
-class intrusive_ref_counters<counter_bitsize, core::thread_safe_t> : public intrusive_type_base
+class intrusive_ref_counters<counter_bitsize, meta::thread_safe_t> : public intrusive_type_base
 {
 private:
-    using atomic_ref_counter_type = core::make_integer_t<counter_bitsize * 2, unsigned, core::thread_safe_t>;
+    using atomic_ref_counter_type = meta::uint_n_t<counter_bitsize * 2, meta::thread_safe_t>;
     using ref_counter_type = typename atomic_ref_counter_type::value_type;
-    static constexpr ref_counter_type use_count_mask = core::make_integer_t<counter_bitsize, unsigned>(~0);
+    static constexpr ref_counter_type use_count_mask = meta::uint_n_t<counter_bitsize, meta::thread_unsafe_t>(~0);
     static constexpr ref_counter_type latent_count_mask = use_count_mask << counter_bitsize;
 
 public:

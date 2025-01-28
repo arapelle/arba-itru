@@ -1,4 +1,4 @@
-# Concept #
+# `arba-itru`
 
 A C++ library providing intrusive types and helper functions using them.
 
@@ -7,17 +7,29 @@ A C++ library providing intrusive types and helper functions using them.
 
 Binaries:
 
-- A C++20 compiler (ex: g++-13)
+- A C++20 compiler (ex: g++-14)
 - CMake 3.26 or later
 
 Testing Libraries (optional):
 
-- [Google Test](https://github.com/google/googletest) 1.13 or later (optional)
+- [Google Test](https://github.com/google/googletest) 1.14 or later (optional)
 
 ## Clone
 
 ```
 git clone https://github.com/arapelle/arba-itru
+```
+
+## Use with `conan`
+
+Create the conan package.
+```
+conan create . --build=missing -c
+```
+Add a requirement in your conanfile project file.
+```python
+    def requirements(self):
+        self.requires("arba-itru/0.3.0")
 ```
 
 ## Quick Install ##
@@ -55,7 +67,7 @@ public:
 
 int main()
 {
-    std::cout << "arba-itru-" << ARBA_ITRU_VERSION << std::endl;
+    std::cout << std::format("arba-itru {}", itru::version) << std::endl;
 
     itru::intrusive_shared_ptr data_isptr = itru::make_intrusive_shared_ptr<intrusive_data>("hello there");
     itru::intrusive_shared_ptr data_isptr_2 = data_isptr;
