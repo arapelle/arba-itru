@@ -1,4 +1,5 @@
 #include <arba/itru/intrusive_ref_counter.hpp>
+
 #include <gtest/gtest.h>
 
 template <unsigned counter_bitsize, meta::ThreadPolicy th_policy>
@@ -14,8 +15,7 @@ public:
         bval = true;
     }
 
-    intrusive_ref_counters(const intrusive_ref_counters& other, bool& bval)
-        : base_(other)
+    intrusive_ref_counters(const intrusive_ref_counters& other, bool& bval) : base_(other)
     {
         bval_ptr = &bval;
         bval = true;
@@ -155,7 +155,6 @@ struct ircnts_tests
     }
 };
 
-
 using ircnt_64_st = intrusive_ref_counters<64, meta::thread_unsafe_t>;
 
 TEST(intrusive_ref_counters_tests, test_ircnts_64_st)
@@ -183,7 +182,6 @@ TEST(intrusive_ref_counters_tests, test_ircnts_64_st_assignment)
     ircnts_tests<ircnt_64_st>::test_ircnts_assignment();
 }
 
-
 using ircnt_32_st = intrusive_ref_counters<32, meta::thread_unsafe_t>;
 
 TEST(intrusive_ref_counters_tests, test_ircnts_32_st)
@@ -210,7 +208,6 @@ TEST(intrusive_ref_counters_tests, test_ircnts_32_st_assignment)
 {
     ircnts_tests<ircnt_32_st>::test_ircnts_assignment();
 }
-
 
 using ircnt_32_mt = intrusive_ref_counters<32, meta::thread_safe_t>;
 
@@ -244,7 +241,6 @@ TEST(intrusive_ref_counters_tests, test_ircnts_32_mt_assignment)
     ircnts_tests<ircnt_32_mt>::test_ircnts_assignment();
 }
 
-
 using ircnt_16_st = intrusive_ref_counters<16, meta::thread_unsafe_t>;
 
 TEST(intrusive_ref_counters_tests, test_ircnts_16_st)
@@ -271,7 +267,6 @@ TEST(intrusive_ref_counters_tests, test_ircnts_16_st_assignment)
 {
     ircnts_tests<ircnt_16_st>::test_ircnts_assignment();
 }
-
 
 using ircnt_16_mt = intrusive_ref_counters<16, meta::thread_safe_t>;
 

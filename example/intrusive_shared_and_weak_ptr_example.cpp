@@ -1,6 +1,7 @@
-#include <arba/itru/version.hpp>
 #include <arba/itru/intrusive_ref_counter.hpp>
 #include <arba/itru/intrusive_weak_ptr.hpp>
+#include <arba/itru/version.hpp>
+
 #include <iostream>
 
 class intrusive_data : public itru::intrusive_ref_counters<>

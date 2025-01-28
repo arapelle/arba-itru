@@ -20,13 +20,12 @@ template <class element_type>
 std::size_t intrusive_weak_ptr_use_count(element_type* ptr) noexcept;
 
 template <class element_type>
-concept intrusive_latent = intrusive_sharable<element_type> && requires(element_type* ptr)
-{
+concept intrusive_latent = intrusive_sharable<element_type> && requires(element_type* ptr) {
     intrusive_weak_ptr_add_ref(ptr);
     intrusive_weak_ptr_release(ptr);
     intrusive_weak_ptr_lock(ptr);
     intrusive_weak_ptr_use_count(ptr);
 };
 
-}
-}
+} // namespace itru::concepts
+} // namespace arba

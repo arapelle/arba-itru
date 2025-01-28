@@ -72,8 +72,7 @@ private:
 };
 
 template <typename Type>
-inline intrusive_weak_ptr<Type>::intrusive_weak_ptr(const intrusive_weak_ptr& iwptr)
-    : pointer_(iwptr.pointer_)
+inline intrusive_weak_ptr<Type>::intrusive_weak_ptr(const intrusive_weak_ptr& iwptr) : pointer_(iwptr.pointer_)
 {
     if (pointer_)
         intrusive_weak_ptr_add_ref(pointer_);
@@ -90,8 +89,7 @@ inline intrusive_weak_ptr<Type>::intrusive_weak_ptr(const intrusive_weak_ptr<Up>
 }
 
 template <typename Type>
-inline intrusive_weak_ptr<Type>::intrusive_weak_ptr(intrusive_weak_ptr&& iwptr)
-    : pointer_(iwptr.pointer_)
+inline intrusive_weak_ptr<Type>::intrusive_weak_ptr(intrusive_weak_ptr&& iwptr) : pointer_(iwptr.pointer_)
 {
     iwptr.pointer_ = nullptr;
 }
@@ -156,6 +154,5 @@ inline void intrusive_weak_ptr<Type>::reset() noexcept
     }
 }
 
-}
-}
-
+} // namespace itru
+} // namespace arba

@@ -1,7 +1,7 @@
 #pragma once
 
-#include <functional>
 #include <cassert>
+#include <functional>
 
 inline namespace arba
 {
@@ -41,14 +41,25 @@ public:
     void reset(element_type* pointer = nullptr) noexcept;
 
     inline element_type* get() const noexcept { return pointer_; }
-    inline element_type& operator*() const noexcept { assert(pointer_); return *pointer_; }
-    inline element_type* operator->() const noexcept { assert(pointer_); return pointer_; }
+    inline element_type& operator*() const noexcept
+    {
+        assert(pointer_);
+        return *pointer_;
+    }
+    inline element_type* operator->() const noexcept
+    {
+        assert(pointer_);
+        return pointer_;
+    }
     inline operator bool() const { return pointer_ != nullptr; }
 
     inline void swap(intrusive_shared_ptr& other) { std::swap(pointer_, other.pointer_); }
     inline auto operator<=>(const intrusive_shared_ptr&) const = default;
 
-    struct lock_tag {};
+    struct lock_tag
+    {
+    };
+
 private:
     intrusive_shared_ptr(element_type* ptr, lock_tag);
 
@@ -61,22 +72,19 @@ private:
 };
 
 template <typename Type>
-inline intrusive_shared_ptr<Type>::intrusive_shared_ptr(Type* ptr)
-    : pointer_(ptr)
+inline intrusive_shared_ptr<Type>::intrusive_shared_ptr(Type* ptr) : pointer_(ptr)
 {
     if (pointer_)
         intrusive_shared_ptr_add_ref(pointer_);
 }
 
 template <typename Type>
-inline intrusive_shared_ptr<Type>::intrusive_shared_ptr(element_type* ptr, lock_tag)
-    : pointer_(ptr)
+inline intrusive_shared_ptr<Type>::intrusive_shared_ptr(element_type* ptr, lock_tag) : pointer_(ptr)
 {
 }
 
 template <typename Type>
-inline intrusive_shared_ptr<Type>::intrusive_shared_ptr(const intrusive_shared_ptr& isptr)
-    : pointer_(isptr.pointer_)
+inline intrusive_shared_ptr<Type>::intrusive_shared_ptr(const intrusive_shared_ptr& isptr) : pointer_(isptr.pointer_)
 {
     if (pointer_)
         intrusive_shared_ptr_add_ref(pointer_);
@@ -93,8 +101,7 @@ inline intrusive_shared_ptr<Type>::intrusive_shared_ptr(const intrusive_shared_p
 }
 
 template <typename Type>
-inline intrusive_shared_ptr<Type>::intrusive_shared_ptr(intrusive_shared_ptr&& isptr)
-    : pointer_(isptr.pointer_)
+inline intrusive_shared_ptr<Type>::intrusive_shared_ptr(intrusive_shared_ptr&& isptr) : pointer_(isptr.pointer_)
 {
     isptr.pointer_ = nullptr;
 }
@@ -154,18 +161,17 @@ inline void intrusive_shared_ptr<Type>::reset(Type* pointer) noexcept
         intrusive_shared_ptr_add_ref(pointer_);
 }
 
-
 template <typename val_type, class... args_types>
 inline intrusive_shared_ptr<val_type> make_intrusive_shared_ptr(args_types&&... args)
 {
     return intrusive_shared_ptr<val_type>(new val_type(std::forward<args_types>(args)...));
 }
 
-}
-}
+} // namespace itru
+} // namespace arba
 
 template <class value_type>
-struct std::hash< ::arba::itru::intrusive_shared_ptr<value_type>> : private std::hash<value_type*>
+struct std::hash<::arba::itru::intrusive_shared_ptr<value_type>> : private std::hash<value_type*>
 {
     std::size_t operator()(const ::arba::itru::intrusive_shared_ptr<value_type>& ptr) const noexcept
     {

@@ -1,7 +1,7 @@
 #pragma once
 
-#include <arba/meta/type_traits/integer_n.hpp>
 #include <arba/meta/policy/thread_policy.hpp>
+#include <arba/meta/type_traits/integer_n.hpp>
 
 inline namespace arba
 {
@@ -14,22 +14,21 @@ private:
     inline ~intrusive_type_base() = default;
 
     template <unsigned counter_bitsize, meta::ThreadPolicy th_policy>
-        requires (sizeof(meta::uint_n_t<counter_bitsize, th_policy>) <= 8)
+        requires(sizeof(meta::uint_n_t<counter_bitsize, th_policy>) <= 8)
     friend class intrusive_ref_counter;
 
     template <unsigned counter_bitsize, meta::ThreadPolicy th_policy>
-        requires (sizeof(meta::uint_n_t<counter_bitsize, th_policy>) < 8
+        requires(sizeof(meta::uint_n_t<counter_bitsize, th_policy>) < 8
                  || std::is_same_v<th_policy, meta::thread_unsafe_t>)
     friend class intrusive_ref_counters;
 };
 
 template <unsigned counter_bitsize = 32, meta::ThreadPolicy th_policy = meta::thread_safe_t>
-    requires (sizeof(meta::uint_n_t<counter_bitsize, th_policy>) <= 8)
+    requires(sizeof(meta::uint_n_t<counter_bitsize, th_policy>) <= 8)
 class intrusive_ref_counter;
 
 template <unsigned counter_bitsize = 32, meta::ThreadPolicy th_policy = meta::thread_safe_t>
-    requires (sizeof(meta::uint_n_t<counter_bitsize, th_policy>) < 8
-             || std::is_same_v<th_policy, meta::thread_unsafe_t>)
+    requires(sizeof(meta::uint_n_t<counter_bitsize, th_policy>) < 8 || std::is_same_v<th_policy, meta::thread_unsafe_t>)
 class intrusive_ref_counters;
 
 template <unsigned counter_bitsize>
@@ -39,25 +38,15 @@ private:
     using atomic_ref_counter_type = meta::uint_n_t<counter_bitsize, meta::thread_safe_t>;
 
 public:
-    intrusive_ref_counter() noexcept
-        : ref_counter_(0)
-    {}
+    intrusive_ref_counter() noexcept : ref_counter_(0) {}
 
-    explicit intrusive_ref_counter(const intrusive_ref_counter&) noexcept
-        : ref_counter_(0)
-    {}
+    explicit intrusive_ref_counter(const intrusive_ref_counter&) noexcept : ref_counter_(0) {}
 
-    intrusive_ref_counter& operator=(const intrusive_ref_counter&) noexcept
-    {
-        return *this;
-    }
+    intrusive_ref_counter& operator=(const intrusive_ref_counter&) noexcept { return *this; }
 
     inline unsigned int use_count() const noexcept { return ref_counter_.load(); }
 
-    inline static void increment_use_counter(intrusive_ref_counter* ptr) noexcept
-    {
-        ptr->ref_counter_.fetch_add(1);
-    }
+    inline static void increment_use_counter(intrusive_ref_counter* ptr) noexcept { ptr->ref_counter_.fetch_add(1); }
 
     inline static bool decrement_use_counter(intrusive_ref_counter* ptr) noexcept
     {
@@ -80,21 +69,13 @@ private:
 public:
     intrusive_ref_counter() noexcept {}
 
-    explicit intrusive_ref_counter(const intrusive_ref_counter&) noexcept
-        : intrusive_ref_counter()
-    {}
+    explicit intrusive_ref_counter(const intrusive_ref_counter&) noexcept : intrusive_ref_counter() {}
 
-    intrusive_ref_counter& operator=(const intrusive_ref_counter&) noexcept
-    {
-        return *this;
-    }
+    intrusive_ref_counter& operator=(const intrusive_ref_counter&) noexcept { return *this; }
 
     inline unsigned int use_count() const noexcept { return ref_counter_; }
 
-    inline static void increment_use_counter(intrusive_ref_counter* ptr) noexcept
-    {
-        ++(ptr->ref_counter_);
-    }
+    inline static void increment_use_counter(intrusive_ref_counter* ptr) noexcept { ++(ptr->ref_counter_); }
 
     inline static bool decrement_use_counter(intrusive_ref_counter* ptr) noexcept
     {
@@ -118,14 +99,9 @@ private:
 public:
     intrusive_ref_counters() noexcept {}
 
-    explicit intrusive_ref_counters(const intrusive_ref_counters&) noexcept
-        : intrusive_ref_counters()
-    {}
+    explicit intrusive_ref_counters(const intrusive_ref_counters&) noexcept : intrusive_ref_counters() {}
 
-    intrusive_ref_counters& operator=(const intrusive_ref_counters&) noexcept
-    {
-        return *this;
-    }
+    intrusive_ref_counters& operator=(const intrusive_ref_counters&) noexcept { return *this; }
 
     inline unsigned int latent_count() const noexcept { return latent_counter_; }
 
@@ -141,10 +117,7 @@ public:
         return true;
     }
 
-    inline static void increment_latent_counter(intrusive_ref_counters* ptr) noexcept
-    {
-        ++(ptr->latent_counter_);
-    }
+    inline static void increment_latent_counter(intrusive_ref_counters* ptr) noexcept { ++(ptr->latent_counter_); }
 
     inline static bool decrement_latent_counter(intrusive_ref_counters* ptr) noexcept
     {
@@ -168,26 +141,19 @@ private:
     static constexpr ref_counter_type latent_count_mask = use_count_mask << counter_bitsize;
 
 public:
-    intrusive_ref_counters() noexcept
-        : ref_counter_(0)
-    {}
+    intrusive_ref_counters() noexcept : ref_counter_(0) {}
 
-    explicit intrusive_ref_counters(const intrusive_ref_counters&) noexcept
-        : ref_counter_(0)
-    {}
+    explicit intrusive_ref_counters(const intrusive_ref_counters&) noexcept : ref_counter_(0) {}
 
-    intrusive_ref_counters& operator=(const intrusive_ref_counters&) noexcept
-    {
-        return *this;
-    }
+    intrusive_ref_counters& operator=(const intrusive_ref_counters&) noexcept { return *this; }
 
     inline unsigned int use_count() const noexcept { return ref_counter_.load() & use_count_mask; }
-    inline unsigned int latent_count() const noexcept { return (ref_counter_.load() & latent_count_mask) >> counter_bitsize; }
-
-    inline static void increment_use_counter(intrusive_ref_counters* ptr) noexcept
+    inline unsigned int latent_count() const noexcept
     {
-        ptr->ref_counter_.fetch_add(1);
+        return (ref_counter_.load() & latent_count_mask) >> counter_bitsize;
     }
+
+    inline static void increment_use_counter(intrusive_ref_counters* ptr) noexcept { ptr->ref_counter_.fetch_add(1); }
 
     inline static bool decrement_use_counter(intrusive_ref_counters* ptr) noexcept
     {
@@ -201,19 +167,18 @@ public:
         {
             if ((counter & use_count_mask) == 0)
                 return false;
-        }
-        while (!ptr->ref_counter_.compare_exchange_strong(counter, counter + 1));
+        } while (!ptr->ref_counter_.compare_exchange_strong(counter, counter + 1));
         return true;
     }
 
     inline static void increment_latent_counter(intrusive_ref_counters* ptr) noexcept
     {
-        ptr->ref_counter_.fetch_add(1LL<<counter_bitsize);
+        ptr->ref_counter_.fetch_add(1LL << counter_bitsize);
     }
 
     inline static bool decrement_latent_counter(intrusive_ref_counters* ptr) noexcept
     {
-        return (ptr->ref_counter_.fetch_sub(1LL<<counter_bitsize)) == 1LL<<counter_bitsize;
+        return (ptr->ref_counter_.fetch_sub(1LL << counter_bitsize)) == 1LL << counter_bitsize;
     }
 
 protected:
@@ -222,7 +187,6 @@ protected:
 private:
     atomic_ref_counter_type ref_counter_ = 0;
 };
-
 
 template <class element_type>
     requires std::is_base_of_v<intrusive_type_base, element_type>
@@ -238,7 +202,6 @@ void intrusive_shared_ptr_release(element_type* ptr) noexcept
     if (element_type::decrement_use_counter(ptr))
         delete ptr;
 }
-
 
 template <class element_type>
     requires std::is_base_of_v<intrusive_type_base, element_type>
@@ -269,5 +232,5 @@ std::size_t intrusive_weak_ptr_use_count(element_type* ptr) noexcept
     return ptr->use_count();
 }
 
-}
-}
+} // namespace itru
+} // namespace arba
