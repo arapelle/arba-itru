@@ -1,5 +1,6 @@
-add_cpp_library_examples(
-    HEADER_ONLY ${PROJECT_NAME}
+include(cmtk/CppLibraryExamples)
+
+add_cpp_library_basic_examples(${PROJECT_NAME}
     SOURCES
         intrusive_shared_and_weak_ptr_example.cpp
 )

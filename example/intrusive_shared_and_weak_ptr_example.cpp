@@ -1,6 +1,7 @@
-#include <arba/itru/version.hpp>
 #include <arba/itru/intrusive_ref_counter.hpp>
 #include <arba/itru/intrusive_weak_ptr.hpp>
+#include <arba/itru/version.hpp>
+
 #include <iostream>
 
 class intrusive_data : public itru::intrusive_ref_counters<>
@@ -12,7 +13,7 @@ public:
 
 int main()
 {
-    std::cout << "arba-itru-" << ARBA_ITRU_VERSION << std::endl;
+    std::cout << std::format("arba-itru {}", itru::version) << std::endl;
 
     itru::intrusive_shared_ptr data_isptr = itru::make_intrusive_shared_ptr<intrusive_data>("hello there");
     itru::intrusive_shared_ptr data_isptr_2 = data_isptr;

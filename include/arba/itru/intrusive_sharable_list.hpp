@@ -17,13 +17,15 @@ public:
     using difference_type = std::ptrdiff_t;
     using iterator_category = std::bidirectional_iterator_tag;
 
-    explicit intrusive_sharable_list_iterator(IntrusiveT& node_ref)
-        : pointer_(&node_ref)
-    {}
+    explicit intrusive_sharable_list_iterator(IntrusiveT& node_ref) : pointer_(&node_ref) {}
 
-    inline intrusive_sharable_list_iterator(intrusive_sharable_list_iterator<std::remove_const_t<IntrusiveT>>const& iter)
+    inline intrusive_sharable_list_iterator(
+        intrusive_sharable_list_iterator<std::remove_const_t<IntrusiveT>> const& iter)
         : pointer_(iter.ptr())
-    {}
+    {
+    }
+
+    inline intrusive_sharable_list_iterator& operator=(intrusive_sharable_list_iterator const& iter) = default;
 
     intrusive_sharable_list_iterator& operator++() noexcept
     {
@@ -137,7 +139,7 @@ public:
     size_type remove_if(UnaryPredicate predicate);
 
 private:
-    void splice_(iterator iter, intrusive_sharable_list &other, iterator first, iterator last, std::size_t size);
+    void splice_(iterator iter, intrusive_sharable_list& other, iterator first, iterator last, std::size_t size);
 
     static void hook_after_(value_type& list_value_ref, value_isptr_type&& value_isptr);
     static void unhook_(value_type& list_value_ref);
@@ -216,9 +218,7 @@ template <class IntrusiveT, typename SentinelT>
 void intrusive_sharable_list<IntrusiveT, SentinelT>::clear()
 {
     value_isptr_type& sentinel_next = sentinel_.next();
-    for (value_type* first_value = sentinel_next.get();
-         first_value != &sentinel_;
-         first_value = sentinel_next.get())
+    for (value_type* first_value = sentinel_next.get(); first_value != &sentinel_; first_value = sentinel_next.get())
     {
         first_value->previous() = nullptr;
         sentinel_next = std::move(first_value->next());
@@ -248,8 +248,7 @@ void intrusive_sharable_list<IntrusiveT, SentinelT>::splice(iterator iter, intru
 }
 
 template <class IntrusiveT, typename SentinelT>
-void intrusive_sharable_list<IntrusiveT, SentinelT>::splice(iterator iter, intrusive_sharable_list& other,
-                                                            iterator it)
+void intrusive_sharable_list<IntrusiveT, SentinelT>::splice(iterator iter, intrusive_sharable_list& other, iterator it)
 {
     value_isptr_type aux_isptr = it.make_intrusive_shared();
     unhook_(*it);
@@ -271,7 +270,7 @@ typename intrusive_sharable_list<IntrusiveT, SentinelT>::size_type
 intrusive_sharable_list<IntrusiveT, SentinelT>::remove_if(UnaryPredicate predicate)
 {
     size_type count = 0;
-    for (auto iter = begin(), end_iter = end(); iter != end_iter; )
+    for (auto iter = begin(), end_iter = end(); iter != end_iter;)
     {
         if (predicate(*iter))
         {
@@ -321,8 +320,8 @@ void intrusive_sharable_list<IntrusiveT, SentinelT>::unhook_(value_type& vref)
     previous->next() = std::move(vref.next());
 }
 
-}
-}
+} // namespace itru
+} // namespace arba
 
 template <class ValueT>
 inline void std::swap(::arba::itru::intrusive_sharable_list<ValueT>& lhs,

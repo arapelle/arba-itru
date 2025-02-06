@@ -1,7 +1,8 @@
 #include <arba/itru/intrusive_ref_counter.hpp>
+
 #include <gtest/gtest.h>
 
-template <unsigned counter_bitsize, core::thread_policy th_policy>
+template <unsigned counter_bitsize, meta::ThreadPolicy th_policy>
 class intrusive_ref_counter : public itru::intrusive_ref_counter<counter_bitsize, th_policy>
 {
 private:
@@ -14,8 +15,7 @@ public:
         bval = true;
     }
 
-    intrusive_ref_counter(const intrusive_ref_counter& other, bool& bval)
-        : base_(other)
+    intrusive_ref_counter(const intrusive_ref_counter& other, bool& bval) : base_(other)
     {
         bval_ptr = &bval;
         bval = true;
@@ -97,7 +97,7 @@ struct ircnt_tests
     }
 };
 
-using ircnt_64_mt = intrusive_ref_counter<64, core::thread_safe_t>;
+using ircnt_64_mt = intrusive_ref_counter<64, meta::thread_safe_t>;
 
 TEST(intrusive_ref_counter_tests, test_ircnt_64_mt)
 {
@@ -114,8 +114,7 @@ TEST(intrusive_ref_counter_tests, test_ircnt_64_mt_assignment)
     ircnt_tests<ircnt_64_mt>::test_ircnt_assignment();
 }
 
-
-using ircnt_64_st = intrusive_ref_counter<64, core::thread_unsafe_t>;
+using ircnt_64_st = intrusive_ref_counter<64, meta::thread_unsafe_t>;
 
 TEST(intrusive_ref_counter_tests, test_ircnt_64_st)
 {
@@ -132,8 +131,7 @@ TEST(intrusive_ref_counter_tests, test_ircnt_64_st_assignment)
     ircnt_tests<ircnt_64_st>::test_ircnt_assignment();
 }
 
-
-using ircnt_32_mt = intrusive_ref_counter<32, core::thread_safe_t>;
+using ircnt_32_mt = intrusive_ref_counter<32, meta::thread_safe_t>;
 
 TEST(intrusive_ref_counter_tests, test_ircnt_32_mt)
 {
@@ -150,8 +148,7 @@ TEST(intrusive_ref_counter_tests, test_ircnt_32_mt_assignment)
     ircnt_tests<ircnt_32_mt>::test_ircnt_assignment();
 }
 
-
-using ircnt_32_st = intrusive_ref_counter<32, core::thread_unsafe_t>;
+using ircnt_32_st = intrusive_ref_counter<32, meta::thread_unsafe_t>;
 
 TEST(intrusive_ref_counter_tests, test_ircnt_32_st)
 {
@@ -168,8 +165,7 @@ TEST(intrusive_ref_counter_tests, test_ircnt_32_st_assignment)
     ircnt_tests<ircnt_32_st>::test_ircnt_assignment();
 }
 
-
-using ircnt_16_mt = intrusive_ref_counter<16, core::thread_safe_t>;
+using ircnt_16_mt = intrusive_ref_counter<16, meta::thread_safe_t>;
 
 TEST(intrusive_ref_counter_tests, test_ircnt_16_mt)
 {
@@ -186,8 +182,7 @@ TEST(intrusive_ref_counter_tests, test_ircnt_16_mt_assignment)
     ircnt_tests<ircnt_16_mt>::test_ircnt_assignment();
 }
 
-
-using ircnt_16_st = intrusive_ref_counter<16, core::thread_unsafe_t>;
+using ircnt_16_st = intrusive_ref_counter<16, meta::thread_unsafe_t>;
 
 TEST(intrusive_ref_counter_tests, test_ircnt_16_st)
 {

@@ -1,4 +1,5 @@
 #include <arba/itru/intrusive_shared_ptr.hpp>
+
 #include <gtest/gtest.h>
 
 // data_with_custom_counter

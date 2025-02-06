@@ -1,5 +1,6 @@
 #include "data_islist_node.hpp"
 #include <arba/itru/intrusive_sharable_list.hpp>
+
 #include <gtest/gtest.h>
 
 //----------------------------------------------------------------
@@ -9,12 +10,9 @@ TEST(intrusive_list_iter_tests, constructor_abstract__no_arg__no_exception)
     using data_islist_node_isptr = itru::intrusive_shared_ptr<data_islist_node>;
 
     constexpr std::size_t node_count = 3;
-    std::array<data_islist_node_isptr, node_count> nodes =
-    {
-        itru::make_intrusive_shared_ptr<data_islist_node>(),
-        itru::make_intrusive_shared_ptr<data_islist_node>(),
-        itru::make_intrusive_shared_ptr<data_islist_node>()
-    };
+    std::array<data_islist_node_isptr, node_count> nodes = { itru::make_intrusive_shared_ptr<data_islist_node>(),
+                                                             itru::make_intrusive_shared_ptr<data_islist_node>(),
+                                                             itru::make_intrusive_shared_ptr<data_islist_node>() };
     for (unsigned i = 0; i < node_count; ++i)
     {
         data_islist_node_isptr& node = nodes[i];
@@ -447,7 +445,8 @@ TEST(intrusive_list_tests, splice__rvalue_list__no_exception)
         data_islist.emplace_back(value_1, "1");
         data_islist.emplace_back(value_2, "2");
         data_islist.emplace_back(value_3, "3");
-        auto gen_list = [&](){
+        auto gen_list = [&]()
+        {
             itru::intrusive_sharable_list<data_islist_node> other_data_islist;
             other_data_islist.emplace_back(value_4, "4");
             other_data_islist.emplace_back(value_5, "5");
@@ -481,8 +480,8 @@ TEST(intrusive_list_tests, splice__sublist__no_exception)
         other_data_islist.emplace_back(value_4, "4");
         other_data_islist.emplace_back(value_5, "5");
         other_data_islist.emplace_back(value_6, "6");
-        data_islist.splice(data_islist.begin(), other_data_islist,
-                           std::next(other_data_islist.begin()), other_data_islist.end());
+        data_islist.splice(data_islist.begin(), other_data_islist, std::next(other_data_islist.begin()),
+                           other_data_islist.end());
         std::vector<const bool*> value_pointers;
         for (const auto& item : data_islist)
             value_pointers.push_back(item.valid);
@@ -511,8 +510,7 @@ TEST(intrusive_list_tests, splice__value_iter__no_exception)
         other_data_islist.emplace_back(value_4, "4");
         other_data_islist.emplace_back(value_5, "5");
         other_data_islist.emplace_back(value_6, "6");
-        data_islist.splice(data_islist.begin(), other_data_islist,
-                           std::next(other_data_islist.begin()));
+        data_islist.splice(data_islist.begin(), other_data_islist, std::next(other_data_islist.begin()));
         std::vector<const bool*> value_pointers;
         for (const auto& item : data_islist)
             value_pointers.push_back(item.valid);
@@ -541,7 +539,7 @@ TEST(intrusive_list_tests, remove_if__lambda__no_exception)
         data_islist.emplace_back(value_4, "44");
         data_islist.emplace_back(value_5, "5");
         data_islist.emplace_back(value_6, "66");
-        data_islist.remove_if([](const data_islist_node& node){ return node.text.size() == 2; });
+        data_islist.remove_if([](const data_islist_node& node) { return node.text.size() == 2; });
         ASSERT_EQ(data_islist.size(), 3);
         std::vector<const bool*> value_pointers;
         for (const auto& item : data_islist)
@@ -573,7 +571,7 @@ TEST(intrusive_list_tests, std_erase_if__lambda__no_exception)
         data_islist.emplace_back(value_4, "44");
         data_islist.emplace_back(value_5, "5");
         data_islist.emplace_back(value_6, "66");
-        std::erase_if(data_islist, [](const data_islist_node& node){ return node.text.size() == 2; });
+        std::erase_if(data_islist, [](const data_islist_node& node) { return node.text.size() == 2; });
         ASSERT_EQ(data_islist.size(), 3);
         std::vector<const bool*> value_pointers;
         for (const auto& item : data_islist)
@@ -588,4 +586,3 @@ TEST(intrusive_list_tests, std_erase_if__lambda__no_exception)
         ASSERT_FALSE(value_6);
     }
 }
-

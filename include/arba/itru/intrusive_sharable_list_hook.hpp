@@ -28,5 +28,5 @@ private:
     intrusive_shared_ptr<IntrusiveListNodeT> next_;
 };
 
-}
-}
+} // namespace itru
+} // namespace arba

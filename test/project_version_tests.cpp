@@ -1,14 +1,10 @@
-#include <arba/itru/version.hpp>
+#include <arba/meta/version.hpp>
 #include <gtest/gtest.h>
-#include <format>
 
-TEST(project_version_tests, test_version_macros)
+TEST(project_version_tests, test_version_core)
 {
-    const unsigned major = 0;
-    const unsigned minor = 2;
-    const unsigned patch = 0;
-    ASSERT_EQ(ARBA_ITRU_VERSION_MAJOR, major);
-    ASSERT_EQ(ARBA_ITRU_VERSION_MINOR, minor);
-    ASSERT_EQ(ARBA_ITRU_VERSION_PATCH, patch);
-    ASSERT_EQ(ARBA_ITRU_VERSION, std::format("{}.{}.{}", major, minor, patch));
+    constexpr unsigned major = 0;
+    constexpr unsigned minor = 3;
+    constexpr unsigned patch = 0;
+    static_assert(arba::meta::version.core() == arba::cppx::numver(major, minor, patch));
 }

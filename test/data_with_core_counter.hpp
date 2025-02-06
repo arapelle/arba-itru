@@ -1,7 +1,8 @@
 #pragma once
 
-#include <string>
 #include <arba/itru/intrusive_ref_counter.hpp>
+
+#include <string>
 
 struct base_with_ircnt : public itru::intrusive_ref_counter<>
 {
@@ -22,10 +23,12 @@ struct data_with_ircnt_mc : public base_with_ircnt
     std::string text;
     bool* valid = nullptr;
 
-    explicit data_with_ircnt_mc(bool& valid, std::string&& text) : text(std::forward<std::string>(text)), valid(&valid) { valid = true; }
+    explicit data_with_ircnt_mc(bool& valid, std::string&& text) : text(std::forward<std::string>(text)), valid(&valid)
+    {
+        valid = true;
+    }
     ~data_with_ircnt_mc() { *valid = false; }
 };
-
 
 struct base_with_ircnts : public itru::intrusive_ref_counters<>
 {

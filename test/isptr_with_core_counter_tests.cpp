@@ -1,10 +1,10 @@
+#include "data_with_core_counter.hpp"
 #include <arba/itru/intrusive_shared_ptr.hpp>
-#include <unordered_set>
-#include <set>
+
 #include <gtest/gtest.h>
 
-#include "data_with_core_counter.hpp"
-
+#include <set>
+#include <unordered_set>
 
 TEST(isptr_with_core_counter_tests, test_iptr_empty_constructor)
 {
@@ -360,8 +360,7 @@ TEST(isptr_with_core_counter_tests, test_iptr_hash)
     {
         data_with_ircnt* ptr = new data_with_ircnt(valid);
         itru::intrusive_shared_ptr<data_with_ircnt> iptr(ptr);
-        ASSERT_EQ(std::hash<itru::intrusive_shared_ptr<data_with_ircnt>>{}(iptr),
-                  std::hash<data_with_ircnt*>{}(ptr));
+        ASSERT_EQ(std::hash<itru::intrusive_shared_ptr<data_with_ircnt>>{}(iptr), std::hash<data_with_ircnt*>{}(ptr));
     }
     ASSERT_FALSE(valid);
 }

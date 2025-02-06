@@ -1,10 +1,10 @@
+#include "data_with_core_counter.hpp"
 #include <arba/itru/intrusive_weak_ptr.hpp>
-#include <unordered_set>
-#include <set>
+
 #include <gtest/gtest.h>
 
-#include "data_with_core_counter.hpp"
-
+#include <set>
+#include <unordered_set>
 
 TEST(iwptr_with_core_counter_tests, test_iwptr_empty_constructor)
 {
