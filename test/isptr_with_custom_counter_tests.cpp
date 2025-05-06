@@ -10,7 +10,7 @@ struct data_with_custom_counter
     std::string text;
     bool* valid = nullptr;
 
-    explicit data_with_custom_counter(bool& valid) : valid(&valid) { valid = true; }
+    explicit data_with_custom_counter(bool& bval) : valid(&bval) { bval = true; }
     ~data_with_custom_counter() { *valid = false; }
 };
 

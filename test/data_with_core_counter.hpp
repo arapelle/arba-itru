@@ -14,7 +14,7 @@ struct data_with_ircnt : public base_with_ircnt
     std::string text;
     bool* valid = nullptr;
 
-    explicit data_with_ircnt(bool& valid, const std::string& text = "") : text(text), valid(&valid) { valid = true; }
+    explicit data_with_ircnt(bool& bval, const std::string& input_text = "") : text(input_text), valid(&bval) { bval = true; }
     ~data_with_ircnt() { *valid = false; }
 };
 
@@ -23,9 +23,9 @@ struct data_with_ircnt_mc : public base_with_ircnt
     std::string text;
     bool* valid = nullptr;
 
-    explicit data_with_ircnt_mc(bool& valid, std::string&& text) : text(std::forward<std::string>(text)), valid(&valid)
+    explicit data_with_ircnt_mc(bool& bval, std::string&& input_text) : text(std::forward<std::string>(input_text)), valid(&bval)
     {
-        valid = true;
+        bval = true;
     }
     ~data_with_ircnt_mc() { *valid = false; }
 };
@@ -40,6 +40,6 @@ struct data_with_ircnts : public base_with_ircnts
     std::string text;
     bool* valid = nullptr;
 
-    explicit data_with_ircnts(bool& valid, const std::string& text = "") : text(text), valid(&valid) { valid = true; }
+    explicit data_with_ircnts(bool& bval, const std::string& input_text = "") : text(input_text), valid(&bval) { bval = true; }
     ~data_with_ircnts() { *valid = false; }
 };
