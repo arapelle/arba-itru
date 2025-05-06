@@ -17,9 +17,9 @@ set_build_type_ifndef()
 
 # C++ PROJECT
 
-set_project_name(NAMESPACE "arba" BASE_NAME "itru")
+set_project_name(NAMESPACE "arba" FEATURE_NAME "itru")
 string(TIMESTAMP configure_datetime "%Y%m%d-%H%M%S")
-set_project_semantic_version("0.3.0" BUILD_METADATA "${configure_datetime}")
+set_project_semantic_version("0.4.0" BUILD_METADATA "${configure_datetime}")
 
 project(${PROJECT_NAME}
         VERSION ${PROJECT_VERSION}
@@ -33,7 +33,7 @@ message(STATUS "PROJECT : ${PROJECT_NAME} ${PROJECT_SEMANTIC_VERSION} ${CMAKE_BU
 ## Generated/Configured headers:
 configure_headers(configured_headers
     FILES
-        include/${PROJECT_NAMESPACE}/${PROJECT_BASE_NAME}/version.hpp.in
+        include/${PROJECT_NAMESPACE}/${PROJECT_FEATURE_NAME}/version.hpp.in
 )
 
 ## Headers:
@@ -48,16 +48,18 @@ set(headers
 )
 
 ## Add C++ library:
+cxx_standard_option(${PROJECT_UPPER_VAR_NAME}_CXX_STANDARD MIN 20 MAX 26)
+
 add_cpp_library(${PROJECT_NAME} HEADER_ONLY
   HEADERS ${headers} ${configured_headers}
-  HEADERS_BASE_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/include
-  CXX_STANDARD 20
+  CXX_STANDARD ${${PROJECT_UPPER_VAR_NAME}_CXX_STANDARD}
   DEFAULT_WARNING_OPTIONS
+  DEFAULT_ERROR_OPTIONS
 )
-add_library("${PROJECT_NAMESPACE}::${PROJECT_BASE_NAME}${LIBRARY_TYPE_POSTFIX}" ALIAS ${PROJECT_NAME})
+add_library("${PROJECT_NAMESPACE}::${PROJECT_FEATURE_NAME}${LIBRARY_TYPE_POSTFIX}" ALIAS ${PROJECT_NAME})
 
 ## Link C++ targets:
-find_package(arba-meta 0.3.0 REQUIRED CONFIG)
+find_package(arba-meta 0.5.0 REQUIRED CONFIG)
 target_link_libraries(${PROJECT_NAME}
     INTERFACE
         arba::meta

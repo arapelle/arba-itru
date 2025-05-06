@@ -29,9 +29,9 @@ struct concrete_data_islist_node : public abstract_data_islist_node
     std::string str;
     bool* valid = nullptr;
 
-    explicit concrete_data_islist_node(bool& valid, const std::string& text = "") : str(text), valid(&valid)
+    explicit concrete_data_islist_node(bool& bval, const std::string& text = "") : str(text), valid(&bval)
     {
-        valid = true;
+        bval = true;
     }
 
     concrete_data_islist_node(concrete_data_islist_node&& other) : str(std::move(other.str)), valid(other.valid)
@@ -58,7 +58,7 @@ struct data_islist_node : public itru::intrusive_ref_counters<>,
 
     data_islist_node() {}
 
-    explicit data_islist_node(bool& valid, const std::string& text = "") : text(text), valid(&valid) { valid = true; }
+    explicit data_islist_node(bool& bval, const std::string& input_text = "") : text(input_text), valid(&bval) { bval = true; }
 
     data_islist_node(data_islist_node&& other) : text(std::move(other.text)), valid(other.valid)
     {
