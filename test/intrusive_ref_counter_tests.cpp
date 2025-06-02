@@ -46,14 +46,14 @@ struct ircnt_tests
         ircnt_type* ircnt_ptr = new ircnt_type(valid);
         ASSERT_TRUE(valid);
         ASSERT_EQ(ircnt_ptr->use_count(), 0);
-        itru::intrusive_shared_ptr_add_ref(ircnt_ptr);
+        itru::shared_intrusive_ptr_add_ref(ircnt_ptr);
         ASSERT_EQ(ircnt_ptr->use_count(), 1);
-        itru::intrusive_shared_ptr_add_ref(ircnt_ptr);
+        itru::shared_intrusive_ptr_add_ref(ircnt_ptr);
         ASSERT_EQ(ircnt_ptr->use_count(), 2);
-        itru::intrusive_shared_ptr_release(ircnt_ptr);
+        itru::shared_intrusive_ptr_release(ircnt_ptr);
         ASSERT_TRUE(valid);
         ASSERT_EQ(ircnt_ptr->use_count(), 1);
-        itru::intrusive_shared_ptr_release(ircnt_ptr);
+        itru::shared_intrusive_ptr_release(ircnt_ptr);
         ASSERT_FALSE(valid);
     }
 
@@ -67,12 +67,12 @@ struct ircnt_tests
         ASSERT_TRUE(valid_2);
         ASSERT_EQ(ircnt_ptr->use_count(), 0);
         ASSERT_EQ(ircnt_ptr_2->use_count(), 0);
-        itru::intrusive_shared_ptr_add_ref(ircnt_ptr_2);
-        itru::intrusive_shared_ptr_release(ircnt_ptr_2);
+        itru::shared_intrusive_ptr_add_ref(ircnt_ptr_2);
+        itru::shared_intrusive_ptr_release(ircnt_ptr_2);
         ASSERT_TRUE(valid);
         ASSERT_FALSE(valid_2);
-        itru::intrusive_shared_ptr_add_ref(ircnt_ptr);
-        itru::intrusive_shared_ptr_release(ircnt_ptr);
+        itru::shared_intrusive_ptr_add_ref(ircnt_ptr);
+        itru::shared_intrusive_ptr_release(ircnt_ptr);
         ASSERT_FALSE(valid_2);
     }
 
@@ -87,12 +87,12 @@ struct ircnt_tests
         ASSERT_TRUE(valid_2);
         ASSERT_EQ(ircnt_ptr->use_count(), 0);
         ASSERT_EQ(ircnt_ptr_2->use_count(), 0);
-        itru::intrusive_shared_ptr_add_ref(ircnt_ptr_2);
-        itru::intrusive_shared_ptr_release(ircnt_ptr_2);
+        itru::shared_intrusive_ptr_add_ref(ircnt_ptr_2);
+        itru::shared_intrusive_ptr_release(ircnt_ptr_2);
         ASSERT_TRUE(valid);
         ASSERT_FALSE(valid_2);
-        itru::intrusive_shared_ptr_add_ref(ircnt_ptr);
-        itru::intrusive_shared_ptr_release(ircnt_ptr);
+        itru::shared_intrusive_ptr_add_ref(ircnt_ptr);
+        itru::shared_intrusive_ptr_release(ircnt_ptr);
         ASSERT_FALSE(valid_2);
     }
 };

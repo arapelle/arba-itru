@@ -38,13 +38,13 @@ configure_headers(configured_headers
 
 ## Headers:
 set(headers
-    include/arba/itru/concepts/intrusive_latent.hpp
-    include/arba/itru/concepts/intrusive_sharable.hpp
+    include/arba/itru/concept/latent_intrusive.hpp
+    include/arba/itru/concept/sharable_intrusive.hpp
     include/arba/itru/intrusive_ref_counter.hpp
-    include/arba/itru/intrusive_sharable_list.hpp
-    include/arba/itru/intrusive_sharable_list_hook.hpp
-    include/arba/itru/intrusive_shared_ptr.hpp
-    include/arba/itru/intrusive_weak_ptr.hpp
+    include/arba/itru/sharable_intrusive_list.hpp
+    include/arba/itru/sharable_intrusive_list_hook.hpp
+    include/arba/itru/shared_intrusive_ptr.hpp
+    include/arba/itru/weak_intrusive_ptr.hpp
 )
 
 ## Add C++ library:

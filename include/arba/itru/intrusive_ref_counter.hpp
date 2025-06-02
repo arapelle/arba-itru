@@ -188,46 +188,49 @@ private:
     atomic_ref_counter_type ref_counter_ = 0;
 };
 
-template <class element_type>
-    requires std::is_base_of_v<intrusive_type_base, element_type>
-void intrusive_shared_ptr_add_ref(element_type* ptr) noexcept
+template <class ElementType>
+    requires std::is_base_of_v<intrusive_type_base, ElementType>
+void shared_intrusive_ptr_add_ref(ElementType* ptr) noexcept
 {
-    element_type::increment_use_counter(ptr);
+    ElementType::increment_use_counter(ptr);
 }
 
-template <class element_type>
-    requires std::is_base_of_v<intrusive_type_base, element_type>
-void intrusive_shared_ptr_release(element_type* ptr) noexcept
+template <class ElementType>
+    requires std::is_base_of_v<intrusive_type_base, ElementType>
+void shared_intrusive_ptr_release(ElementType* ptr) noexcept
 {
-    if (element_type::decrement_use_counter(ptr))
+    if (ElementType::decrement_use_counter(ptr))
         delete ptr;
 }
 
-template <class element_type>
-    requires std::is_base_of_v<intrusive_type_base, element_type>
-void intrusive_weak_ptr_add_ref(element_type* ptr) noexcept
+template <class ElementType>
+    requires std::is_base_of_v<intrusive_type_base, ElementType>
+void weak_intrusive_ptr_add_ref(ElementType* ptr) noexcept
 {
-    element_type::increment_latent_counter(ptr);
+    ElementType::increment_latent_counter(ptr);
 }
 
-template <class element_type>
-    requires std::is_base_of_v<intrusive_type_base, element_type>
-void intrusive_weak_ptr_release(element_type* ptr) noexcept
+template <class ElementType>
+    requires std::is_base_of_v<intrusive_type_base, ElementType>
+             && requires(ElementType* ptr) {
+                    ElementType::decrement_latent_counter(ptr);
+                }
+void weak_intrusive_ptr_release(ElementType* ptr) noexcept
 {
-    if (element_type::decrement_latent_counter(ptr))
+    if (ElementType::decrement_latent_counter(ptr))
         delete ptr;
 }
 
-template <class element_type>
-    requires std::is_base_of_v<intrusive_type_base, element_type>
-bool intrusive_weak_ptr_lock(element_type* ptr) noexcept
+template <class ElementType>
+    requires std::is_base_of_v<intrusive_type_base, ElementType>
+bool weak_intrusive_ptr_lock(ElementType* ptr) noexcept
 {
-    return element_type::lock_use_counter(ptr);
+    return ElementType::lock_use_counter(ptr);
 }
 
-template <class element_type>
-    requires std::is_base_of_v<intrusive_type_base, element_type>
-std::size_t intrusive_weak_ptr_use_count(element_type* ptr) noexcept
+template <class ElementType>
+    requires std::is_base_of_v<intrusive_type_base, ElementType>
+std::size_t weak_intrusive_ptr_use_count(ElementType* ptr) noexcept
 {
     return ptr->use_count();
 }

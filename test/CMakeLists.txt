@@ -8,9 +8,9 @@ add_cpp_library_basic_tests(${PROJECT_NAME} GTest::gtest_main
         project_version_tests.cpp
         intrusive_ref_counter_tests.cpp
         intrusive_ref_counters_tests.cpp
-        isptr_with_custom_counter_tests.cpp
-        isptr_with_core_counter_tests.cpp
-        make_isptr_tests.cpp
-        iwptr_with_core_counter_tests.cpp
-        intrusive_sharable_list_tests.cpp
+        siptr_with_custom_counter_tests.cpp
+        siptr_with_core_counter_tests.cpp
+        make_siptr_tests.cpp
+        wiptr_with_core_counter_tests.cpp
+        sharable_intrusive_list_tests.cpp
 )

@@ -1,4 +1,5 @@
-#include <arba/itru/intrusive_shared_ptr.hpp>
+#include <arba/itru/shared_intrusive_ptr.hpp>
+#include <arba/itru/concept/sharable_intrusive.hpp>
 
 #include <gtest/gtest.h>
 
@@ -16,31 +17,33 @@ struct data_with_custom_counter
 
 // counter manager functions for data_with_custom_counter
 
-void intrusive_shared_ptr_add_ref(data_with_custom_counter* ptr) noexcept
+void shared_intrusive_ptr_add_ref(data_with_custom_counter* ptr) noexcept
 {
     ++(ptr->counter);
 }
 
-void intrusive_shared_ptr_release(data_with_custom_counter* ptr) noexcept
+void shared_intrusive_ptr_release(data_with_custom_counter* ptr) noexcept
 {
     if (--(ptr->counter); ptr->counter == 0)
         delete ptr;
 }
 
+static_assert(itru::SharableIntrusive<data_with_custom_counter>);
+
 // tests:
 
-TEST(isptr_with_custom_counter_tests, test_iptr_empty_constructor)
+TEST(siptr_with_custom_counter_tests, test_iptr_empty_constructor)
 {
-    itru::intrusive_shared_ptr<data_with_custom_counter> iptr;
+    itru::shared_intrusive_ptr<data_with_custom_counter> iptr;
     ASSERT_EQ(iptr.get(), nullptr);
 }
 
-TEST(isptr_with_custom_counter_tests, test_iptr_constructor_ptr)
+TEST(siptr_with_custom_counter_tests, test_iptr_constructor_ptr)
 {
     bool valid = false;
     {
         data_with_custom_counter* data_ptr = new data_with_custom_counter(valid);
-        itru::intrusive_shared_ptr<data_with_custom_counter> iptr(data_ptr);
+        itru::shared_intrusive_ptr<data_with_custom_counter> iptr(data_ptr);
         ASSERT_EQ(iptr.get(), data_ptr);
         ASSERT_EQ(iptr->counter, 1);
         ASSERT_TRUE(valid);
@@ -48,14 +51,14 @@ TEST(isptr_with_custom_counter_tests, test_iptr_constructor_ptr)
     ASSERT_FALSE(valid);
 }
 
-TEST(isptr_with_custom_counter_tests, test_iptr_copy_constructor)
+TEST(siptr_with_custom_counter_tests, test_iptr_copy_constructor)
 {
     bool valid = false;
     {
         data_with_custom_counter* data_ptr = new data_with_custom_counter(valid);
-        itru::intrusive_shared_ptr<data_with_custom_counter> iptr(data_ptr);
+        itru::shared_intrusive_ptr<data_with_custom_counter> iptr(data_ptr);
         {
-            itru::intrusive_shared_ptr<data_with_custom_counter> jptr(iptr);
+            itru::shared_intrusive_ptr<data_with_custom_counter> jptr(iptr);
             ASSERT_EQ(iptr.get(), data_ptr);
             ASSERT_EQ(iptr->counter, 2);
             ASSERT_EQ(jptr.get(), data_ptr);
@@ -69,13 +72,13 @@ TEST(isptr_with_custom_counter_tests, test_iptr_copy_constructor)
     ASSERT_FALSE(valid);
 }
 
-TEST(isptr_with_custom_counter_tests, test_iptr_move_constructor)
+TEST(siptr_with_custom_counter_tests, test_iptr_move_constructor)
 {
     bool valid = false;
     data_with_custom_counter* data_ptr = new data_with_custom_counter(valid);
-    itru::intrusive_shared_ptr<data_with_custom_counter> iptr(data_ptr);
+    itru::shared_intrusive_ptr<data_with_custom_counter> iptr(data_ptr);
     {
-        itru::intrusive_shared_ptr<data_with_custom_counter> jptr(std::move(iptr));
+        itru::shared_intrusive_ptr<data_with_custom_counter> jptr(std::move(iptr));
         ASSERT_EQ(iptr.get(), nullptr);
         ASSERT_EQ(jptr.get(), data_ptr);
         ASSERT_EQ(jptr->counter, 1);
