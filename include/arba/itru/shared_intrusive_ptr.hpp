@@ -162,7 +162,7 @@ inline void shared_intrusive_ptr<Type>::reset(Type* pointer) noexcept
 }
 
 template <typename val_type, class... args_types>
-inline shared_intrusive_ptr<val_type> make_shared_intrusive_ptr(args_types&&... args)
+[[nodiscard]] inline shared_intrusive_ptr<val_type> make_shared_intrusive_ptr(args_types&&... args)
 {
     return shared_intrusive_ptr<val_type>(new val_type(std::forward<args_types>(args)...));
 }

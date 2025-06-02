@@ -48,7 +48,7 @@ public:
         return 0;
     }
     inline bool expired() const noexcept { return use_count() == 0; }
-    inline shared_intrusive_ptr<element_type> lock() const noexcept
+    [[nodiscard]] inline shared_intrusive_ptr<element_type> lock() const noexcept
     {
         if (pointer_) [[likely]]
         {
@@ -72,7 +72,7 @@ private:
 };
 
 template <typename Type>
-inline weak_intrusive_ptr<Type>::weak_intrusive_ptr(const weak_intrusive_ptr& wiptr) : pointer_(wiptr.pointer_)
+[[nodiscard]] inline weak_intrusive_ptr<Type>::weak_intrusive_ptr(const weak_intrusive_ptr& wiptr) : pointer_(wiptr.pointer_)
 {
     if (pointer_)
         weak_intrusive_ptr_add_ref(pointer_);
