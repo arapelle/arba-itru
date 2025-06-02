@@ -1,23 +1,27 @@
 #include "data_with_core_counter.hpp"
-#include <arba/itru/intrusive_shared_ptr.hpp>
+#include <arba/itru/shared_intrusive_ptr.hpp>
+#include <arba/itru/concept/sharable_intrusive.hpp>
 
 #include <gtest/gtest.h>
 
 #include <set>
 #include <unordered_set>
 
-TEST(isptr_with_core_counter_tests, test_iptr_empty_constructor)
+// TEST(siptr_with_core_counter_tests, SharableIntrusive__valid_type__true)
+static_assert(itru::SharableIntrusive<data_with_ircnt>);
+
+TEST(siptr_with_core_counter_tests, test_iptr_empty_constructor)
 {
-    itru::intrusive_shared_ptr<data_with_ircnt> iptr;
+    itru::shared_intrusive_ptr<data_with_ircnt> iptr;
     ASSERT_EQ(iptr.get(), nullptr);
 }
 
-TEST(isptr_with_core_counter_tests, test_iptr_constructor_ptr)
+TEST(siptr_with_core_counter_tests, test_iptr_constructor_ptr)
 {
     bool valid = false;
     {
         data_with_ircnt* data_ptr = new data_with_ircnt(valid);
-        itru::intrusive_shared_ptr<data_with_ircnt> iptr(data_ptr);
+        itru::shared_intrusive_ptr<data_with_ircnt> iptr(data_ptr);
         ASSERT_EQ(iptr.get(), data_ptr);
         ASSERT_EQ(iptr->use_count(), 1);
         ASSERT_TRUE(valid);
@@ -25,14 +29,14 @@ TEST(isptr_with_core_counter_tests, test_iptr_constructor_ptr)
     ASSERT_FALSE(valid);
 }
 
-TEST(isptr_with_core_counter_tests, test_iptr_copy_constructor)
+TEST(siptr_with_core_counter_tests, test_iptr_copy_constructor)
 {
     bool valid = false;
     {
         data_with_ircnt* data_ptr = new data_with_ircnt(valid);
-        itru::intrusive_shared_ptr<data_with_ircnt> iptr(data_ptr);
+        itru::shared_intrusive_ptr<data_with_ircnt> iptr(data_ptr);
         {
-            itru::intrusive_shared_ptr<data_with_ircnt> jptr(iptr);
+            itru::shared_intrusive_ptr<data_with_ircnt> jptr(iptr);
             ASSERT_EQ(iptr.get(), data_ptr);
             ASSERT_EQ(iptr->use_count(), 2);
             ASSERT_EQ(jptr.get(), data_ptr);
@@ -46,14 +50,14 @@ TEST(isptr_with_core_counter_tests, test_iptr_copy_constructor)
     ASSERT_FALSE(valid);
 }
 
-TEST(isptr_with_core_counter_tests, test_iptr_copy_constructor_other)
+TEST(siptr_with_core_counter_tests, test_iptr_copy_constructor_other)
 {
     bool valid = false;
     {
         data_with_ircnt* data_ptr = new data_with_ircnt(valid);
-        itru::intrusive_shared_ptr<data_with_ircnt> iptr(data_ptr);
+        itru::shared_intrusive_ptr<data_with_ircnt> iptr(data_ptr);
         {
-            itru::intrusive_shared_ptr<base_with_ircnt> jptr(iptr);
+            itru::shared_intrusive_ptr<base_with_ircnt> jptr(iptr);
             ASSERT_EQ(iptr.get(), data_ptr);
             ASSERT_EQ(iptr->use_count(), 2);
             ASSERT_EQ(jptr.get(), data_ptr);
@@ -67,13 +71,13 @@ TEST(isptr_with_core_counter_tests, test_iptr_copy_constructor_other)
     ASSERT_FALSE(valid);
 }
 
-TEST(isptr_with_core_counter_tests, test_iptr_move_constructor)
+TEST(siptr_with_core_counter_tests, test_iptr_move_constructor)
 {
     bool valid = false;
     data_with_ircnt* data_ptr = new data_with_ircnt(valid);
-    itru::intrusive_shared_ptr<data_with_ircnt> iptr(data_ptr);
+    itru::shared_intrusive_ptr<data_with_ircnt> iptr(data_ptr);
     {
-        itru::intrusive_shared_ptr<data_with_ircnt> jptr(std::move(iptr));
+        itru::shared_intrusive_ptr<data_with_ircnt> jptr(std::move(iptr));
         ASSERT_EQ(iptr.get(), nullptr);
         ASSERT_EQ(jptr.get(), data_ptr);
         ASSERT_EQ(jptr->use_count(), 1);
@@ -82,13 +86,13 @@ TEST(isptr_with_core_counter_tests, test_iptr_move_constructor)
     ASSERT_FALSE(valid);
 }
 
-TEST(isptr_with_core_counter_tests, test_iptr_move_constructor_other)
+TEST(siptr_with_core_counter_tests, test_iptr_move_constructor_other)
 {
     bool valid = false;
     data_with_ircnt* data_ptr = new data_with_ircnt(valid);
-    itru::intrusive_shared_ptr<data_with_ircnt> iptr(data_ptr);
+    itru::shared_intrusive_ptr<data_with_ircnt> iptr(data_ptr);
     {
-        itru::intrusive_shared_ptr<base_with_ircnt> jptr(std::move(iptr));
+        itru::shared_intrusive_ptr<base_with_ircnt> jptr(std::move(iptr));
         ASSERT_EQ(iptr.get(), nullptr);
         ASSERT_EQ(jptr.get(), data_ptr);
         ASSERT_EQ(jptr->use_count(), 1);
@@ -97,15 +101,15 @@ TEST(isptr_with_core_counter_tests, test_iptr_move_constructor_other)
     ASSERT_FALSE(valid);
 }
 
-TEST(isptr_with_core_counter_tests, test_iptr_copy_assignment)
+TEST(siptr_with_core_counter_tests, test_iptr_copy_assignment)
 {
     bool valid = false;
     {
         data_with_ircnt* data_ptr = new data_with_ircnt(valid);
-        itru::intrusive_shared_ptr<data_with_ircnt> iptr(data_ptr);
+        itru::shared_intrusive_ptr<data_with_ircnt> iptr(data_ptr);
         {
             bool valid_2 = false;
-            itru::intrusive_shared_ptr<data_with_ircnt> jptr(new data_with_ircnt(valid_2));
+            itru::shared_intrusive_ptr<data_with_ircnt> jptr(new data_with_ircnt(valid_2));
             ASSERT_TRUE(valid_2);
             jptr = iptr;
             ASSERT_FALSE(valid_2);
@@ -122,15 +126,15 @@ TEST(isptr_with_core_counter_tests, test_iptr_copy_assignment)
     ASSERT_FALSE(valid);
 }
 
-TEST(isptr_with_core_counter_tests, test_iptr_copy_assignment_other)
+TEST(siptr_with_core_counter_tests, test_iptr_copy_assignment_other)
 {
     bool valid = false;
     {
         data_with_ircnt* data_ptr = new data_with_ircnt(valid);
-        itru::intrusive_shared_ptr<data_with_ircnt> iptr(data_ptr);
+        itru::shared_intrusive_ptr<data_with_ircnt> iptr(data_ptr);
         {
             bool valid_2 = false;
-            itru::intrusive_shared_ptr<base_with_ircnt> jptr(new data_with_ircnt(valid_2));
+            itru::shared_intrusive_ptr<base_with_ircnt> jptr(new data_with_ircnt(valid_2));
             ASSERT_TRUE(valid_2);
             jptr = iptr;
             ASSERT_FALSE(valid_2);
@@ -147,15 +151,15 @@ TEST(isptr_with_core_counter_tests, test_iptr_copy_assignment_other)
     ASSERT_FALSE(valid);
 }
 
-TEST(isptr_with_core_counter_tests, test_iptr_move_assignment)
+TEST(siptr_with_core_counter_tests, test_iptr_move_assignment)
 {
     bool valid = false;
     {
         data_with_ircnt* data_ptr = new data_with_ircnt(valid);
-        itru::intrusive_shared_ptr<data_with_ircnt> iptr(data_ptr);
+        itru::shared_intrusive_ptr<data_with_ircnt> iptr(data_ptr);
         {
             bool valid_2 = false;
-            itru::intrusive_shared_ptr<data_with_ircnt> jptr(new data_with_ircnt(valid_2));
+            itru::shared_intrusive_ptr<data_with_ircnt> jptr(new data_with_ircnt(valid_2));
             ASSERT_TRUE(valid_2);
             jptr = std::move(iptr);
             ASSERT_FALSE(valid_2);
@@ -169,15 +173,15 @@ TEST(isptr_with_core_counter_tests, test_iptr_move_assignment)
     ASSERT_FALSE(valid);
 }
 
-TEST(isptr_with_core_counter_tests, test_iptr_move_assignment_other)
+TEST(siptr_with_core_counter_tests, test_iptr_move_assignment_other)
 {
     bool valid = false;
     {
         data_with_ircnt* data_ptr = new data_with_ircnt(valid);
-        itru::intrusive_shared_ptr<data_with_ircnt> iptr(data_ptr);
+        itru::shared_intrusive_ptr<data_with_ircnt> iptr(data_ptr);
         {
             bool valid_2 = false;
-            itru::intrusive_shared_ptr<base_with_ircnt> jptr(new data_with_ircnt(valid_2));
+            itru::shared_intrusive_ptr<base_with_ircnt> jptr(new data_with_ircnt(valid_2));
             ASSERT_TRUE(valid_2);
             jptr = std::move(iptr);
             ASSERT_FALSE(valid_2);
@@ -193,12 +197,12 @@ TEST(isptr_with_core_counter_tests, test_iptr_move_assignment_other)
 
 //----------------------------------------------------------------------
 
-TEST(isptr_with_core_counter_tests, test_iptr_release)
+TEST(siptr_with_core_counter_tests, test_iptr_release)
 {
     bool valid = false;
     {
         data_with_ircnt* data_ptr = new data_with_ircnt(valid);
-        itru::intrusive_shared_ptr<data_with_ircnt> iptr(data_ptr);
+        itru::shared_intrusive_ptr<data_with_ircnt> iptr(data_ptr);
         data_with_ircnt* d_ptr = iptr.release();
         ASSERT_EQ(d_ptr, data_ptr);
         ASSERT_EQ(iptr.get(), nullptr);
@@ -207,12 +211,12 @@ TEST(isptr_with_core_counter_tests, test_iptr_release)
     ASSERT_FALSE(valid);
 }
 
-TEST(isptr_with_core_counter_tests, test_iptr_reset_nullptr)
+TEST(siptr_with_core_counter_tests, test_iptr_reset_nullptr)
 {
     bool valid = false;
     {
         data_with_ircnt* data_ptr = new data_with_ircnt(valid);
-        itru::intrusive_shared_ptr<data_with_ircnt> iptr(data_ptr);
+        itru::shared_intrusive_ptr<data_with_ircnt> iptr(data_ptr);
         iptr.reset();
         ASSERT_EQ(iptr.get(), nullptr);
         ASSERT_FALSE(valid);
@@ -220,14 +224,14 @@ TEST(isptr_with_core_counter_tests, test_iptr_reset_nullptr)
     ASSERT_FALSE(valid);
 }
 
-TEST(isptr_with_core_counter_tests, test_iptr_reset_other_ptr)
+TEST(siptr_with_core_counter_tests, test_iptr_reset_other_ptr)
 {
     bool valid = false;
     bool other_valid = false;
     {
         data_with_ircnt* data_ptr = new data_with_ircnt(valid);
         data_with_ircnt* other_data_ptr = new data_with_ircnt(other_valid);
-        itru::intrusive_shared_ptr<data_with_ircnt> iptr(data_ptr);
+        itru::shared_intrusive_ptr<data_with_ircnt> iptr(data_ptr);
         iptr.reset(other_data_ptr);
         ASSERT_EQ(iptr.get(), other_data_ptr);
         ASSERT_EQ(iptr->use_count(), 1);
@@ -238,12 +242,12 @@ TEST(isptr_with_core_counter_tests, test_iptr_reset_other_ptr)
     ASSERT_FALSE(other_valid);
 }
 
-TEST(isptr_with_core_counter_tests, test_iptr_operator_deref)
+TEST(siptr_with_core_counter_tests, test_iptr_operator_deref)
 {
     bool valid = false;
     {
         data_with_ircnt* data_ptr = new data_with_ircnt(valid);
-        itru::intrusive_shared_ptr<data_with_ircnt> iptr(data_ptr);
+        itru::shared_intrusive_ptr<data_with_ircnt> iptr(data_ptr);
         data_with_ircnt& data_ref = *data_ptr;
         ASSERT_EQ(&data_ref, data_ptr);
         ASSERT_EQ(iptr.get(), data_ptr);
@@ -253,12 +257,12 @@ TEST(isptr_with_core_counter_tests, test_iptr_operator_deref)
     ASSERT_FALSE(valid);
 }
 
-TEST(isptr_with_core_counter_tests, test_iptr_operator_deref_const)
+TEST(siptr_with_core_counter_tests, test_iptr_operator_deref_const)
 {
     bool valid = false;
     {
         data_with_ircnt* data_ptr = new data_with_ircnt(valid);
-        const itru::intrusive_shared_ptr<data_with_ircnt> iptr(data_ptr);
+        const itru::shared_intrusive_ptr<data_with_ircnt> iptr(data_ptr);
         const data_with_ircnt& data_ref = *data_ptr;
         ASSERT_EQ(&data_ref, data_ptr);
         ASSERT_EQ(iptr.get(), data_ptr);
@@ -268,12 +272,12 @@ TEST(isptr_with_core_counter_tests, test_iptr_operator_deref_const)
     ASSERT_FALSE(valid);
 }
 
-TEST(isptr_with_core_counter_tests, test_iptr_operator_arrow)
+TEST(siptr_with_core_counter_tests, test_iptr_operator_arrow)
 {
     bool valid = false;
     {
         data_with_ircnt* data_ptr = new data_with_ircnt(valid, "arba::core");
-        itru::intrusive_shared_ptr<data_with_ircnt> iptr(data_ptr);
+        itru::shared_intrusive_ptr<data_with_ircnt> iptr(data_ptr);
         ASSERT_EQ(iptr->text, "arba::core");
         iptr->text = "arba_core";
         ASSERT_EQ(&iptr->text, &data_ptr->text);
@@ -284,12 +288,12 @@ TEST(isptr_with_core_counter_tests, test_iptr_operator_arrow)
     ASSERT_FALSE(valid);
 }
 
-TEST(isptr_with_core_counter_tests, test_iptr_operator_arrow_const)
+TEST(siptr_with_core_counter_tests, test_iptr_operator_arrow_const)
 {
     bool valid = false;
     {
         data_with_ircnt* data_ptr = new data_with_ircnt(valid, "arba::core");
-        const itru::intrusive_shared_ptr<data_with_ircnt> iptr(data_ptr);
+        const itru::shared_intrusive_ptr<data_with_ircnt> iptr(data_ptr);
         ASSERT_EQ(iptr->text, "arba::core");
         iptr->text = "arba_core";
         ASSERT_EQ(&iptr->text, &data_ptr->text);
@@ -300,12 +304,12 @@ TEST(isptr_with_core_counter_tests, test_iptr_operator_arrow_const)
     ASSERT_FALSE(valid);
 }
 
-TEST(isptr_with_core_counter_tests, test_iptr_operator_cast_to_bool)
+TEST(siptr_with_core_counter_tests, test_iptr_operator_cast_to_bool)
 {
     bool valid = false;
     {
         data_with_ircnt* data_ptr = new data_with_ircnt(valid);
-        itru::intrusive_shared_ptr<data_with_ircnt> iptr(data_ptr);
+        itru::shared_intrusive_ptr<data_with_ircnt> iptr(data_ptr);
         bool test_bool = iptr;
         ASSERT_TRUE(test_bool);
         ASSERT_EQ(iptr.get(), data_ptr);
@@ -318,13 +322,13 @@ TEST(isptr_with_core_counter_tests, test_iptr_operator_cast_to_bool)
     ASSERT_FALSE(valid);
 }
 
-TEST(isptr_with_core_counter_tests, test_iptr_swap)
+TEST(siptr_with_core_counter_tests, test_iptr_swap)
 {
     bool valid = false;
     data_with_ircnt* data_ptr = new data_with_ircnt(valid);
-    itru::intrusive_shared_ptr<data_with_ircnt> iptr(data_ptr);
+    itru::shared_intrusive_ptr<data_with_ircnt> iptr(data_ptr);
     data_with_ircnt* other_data_ptr = new data_with_ircnt(valid);
-    itru::intrusive_shared_ptr<data_with_ircnt> jptr(other_data_ptr);
+    itru::shared_intrusive_ptr<data_with_ircnt> jptr(other_data_ptr);
     iptr.swap(jptr);
     ASSERT_EQ(iptr.get(), other_data_ptr);
     ASSERT_EQ(iptr->use_count(), 1);
@@ -334,46 +338,46 @@ TEST(isptr_with_core_counter_tests, test_iptr_swap)
     ASSERT_TRUE(valid);
 }
 
-TEST(isptr_with_core_counter_tests, test_iptr_operator_eq)
+TEST(siptr_with_core_counter_tests, test_iptr_operator_eq)
 {
     bool valid = false;
     data_with_ircnt* data_ptr = new data_with_ircnt(valid);
-    itru::intrusive_shared_ptr<data_with_ircnt> iptr(data_ptr);
-    itru::intrusive_shared_ptr<data_with_ircnt> jptr(data_ptr);
+    itru::shared_intrusive_ptr<data_with_ircnt> iptr(data_ptr);
+    itru::shared_intrusive_ptr<data_with_ircnt> jptr(data_ptr);
     ASSERT_EQ(iptr, jptr);
     ASSERT_EQ(iptr->use_count(), 2);
 }
 
-TEST(isptr_with_core_counter_tests, test_iptr_operator_ne)
+TEST(siptr_with_core_counter_tests, test_iptr_operator_ne)
 {
     bool valid = false;
     data_with_ircnt* data_ptr = new data_with_ircnt(valid);
-    itru::intrusive_shared_ptr<data_with_ircnt> iptr(data_ptr);
+    itru::shared_intrusive_ptr<data_with_ircnt> iptr(data_ptr);
     data_with_ircnt* other_data_ptr = new data_with_ircnt(valid);
-    itru::intrusive_shared_ptr<data_with_ircnt> jptr(other_data_ptr);
+    itru::shared_intrusive_ptr<data_with_ircnt> jptr(other_data_ptr);
     ASSERT_NE(iptr, jptr);
 }
 
-TEST(isptr_with_core_counter_tests, test_iptr_hash)
+TEST(siptr_with_core_counter_tests, test_iptr_hash)
 {
     bool valid = true;
     {
         data_with_ircnt* ptr = new data_with_ircnt(valid);
-        itru::intrusive_shared_ptr<data_with_ircnt> iptr(ptr);
-        ASSERT_EQ(std::hash<itru::intrusive_shared_ptr<data_with_ircnt>>{}(iptr), std::hash<data_with_ircnt*>{}(ptr));
+        itru::shared_intrusive_ptr<data_with_ircnt> iptr(ptr);
+        ASSERT_EQ(std::hash<itru::shared_intrusive_ptr<data_with_ircnt>>{}(iptr), std::hash<data_with_ircnt*>{}(ptr));
     }
     ASSERT_FALSE(valid);
 }
 
-TEST(isptr_with_core_counter_tests, test_iptr_set_and_uset)
+TEST(siptr_with_core_counter_tests, test_iptr_set_and_uset)
 {
     bool b_set = true;
     bool b_uset = true;
     {
-        std::set<itru::intrusive_shared_ptr<data_with_ircnt>> iptr_set;
-        iptr_set.insert(itru::intrusive_shared_ptr<data_with_ircnt>(new data_with_ircnt(b_set)));
-        std::unordered_set<itru::intrusive_shared_ptr<data_with_ircnt>> iptr_uset;
-        iptr_uset.insert(itru::intrusive_shared_ptr<data_with_ircnt>(new data_with_ircnt(b_uset)));
+        std::set<itru::shared_intrusive_ptr<data_with_ircnt>> iptr_set;
+        iptr_set.insert(itru::shared_intrusive_ptr<data_with_ircnt>(new data_with_ircnt(b_set)));
+        std::unordered_set<itru::shared_intrusive_ptr<data_with_ircnt>> iptr_uset;
+        iptr_uset.insert(itru::shared_intrusive_ptr<data_with_ircnt>(new data_with_ircnt(b_uset)));
     }
     ASSERT_FALSE(b_set);
     ASSERT_FALSE(b_uset);

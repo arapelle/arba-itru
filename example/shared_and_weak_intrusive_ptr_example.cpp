@@ -32,6 +32,5 @@ int main()
     std::cout << data_wiptr.use_count() << std::endl;
     std::cout << std::boolalpha << data_wiptr.expired() << std::endl;
 
-    std::cout << "TEST PACKAGE SUCCESS" << std::endl;
     return EXIT_SUCCESS;
 }

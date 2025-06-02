@@ -19,7 +19,7 @@ set_build_type_ifndef()
 
 set_project_name(NAMESPACE "arba" FEATURE_NAME "itru")
 string(TIMESTAMP configure_datetime "%Y%m%d-%H%M%S")
-set_project_semantic_version("0.4.0" BUILD_METADATA "${configure_datetime}")
+set_project_semantic_version("0.5.0" PRE_RELEASE "dev" BUILD_METADATA "${configure_datetime}")
 
 project(${PROJECT_NAME}
         VERSION ${PROJECT_VERSION}
@@ -38,13 +38,13 @@ configure_headers(configured_headers
 
 ## Headers:
 set(headers
-    include/arba/itru/concepts/intrusive_latent.hpp
-    include/arba/itru/concepts/intrusive_sharable.hpp
+    include/arba/itru/concept/latent_intrusive.hpp
+    include/arba/itru/concept/sharable_intrusive.hpp
     include/arba/itru/intrusive_ref_counter.hpp
-    include/arba/itru/intrusive_sharable_list.hpp
-    include/arba/itru/intrusive_sharable_list_hook.hpp
-    include/arba/itru/intrusive_shared_ptr.hpp
-    include/arba/itru/intrusive_weak_ptr.hpp
+    include/arba/itru/sharable_intrusive_list.hpp
+    include/arba/itru/sharable_intrusive_list_hook.hpp
+    include/arba/itru/shared_intrusive_ptr.hpp
+    include/arba/itru/weak_intrusive_ptr.hpp
 )
 
 ## Add C++ library:
